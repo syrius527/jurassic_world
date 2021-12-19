@@ -3,6 +3,7 @@
         "x": 0,
         "y": 0,
         "type": null,
+        "fieldType": null,
         "item": 0,
         "monster": 0,
         "content": "모험이 시작 되었습니다."
@@ -11,6 +12,7 @@
         "x": 0,
         "y": 1,
         "type": "battle",
+        "fieldType": "green",
         "item": 0,
         "monster": 1,
         "content": "거대한 웜이 나타났습니다."
@@ -19,6 +21,7 @@
         "x": 0,
         "y": 2,
         "type": null,
+        "fieldType": "green",
         "item": 0,
         "monster": 0,
         "content": "고요한 평원에 도착했다."

@@ -1,16 +1,17 @@
-const express = require('express')
-const app = express()
-const port = 3000
-const path = require('path')
-const crypto = require('crypto')
+const express = require('express');
+const app = express();
+const port = 3000;
+const path = require('path');
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const { encryptPassword, setAuth } = require("./utils");
-const fs = require('fs')
+const fs = require('fs');
 const { constantManager, mapManager } = require("./data/Manager");
 const { User, Player, Inventory } = require('./models');
-dotenv.config()
+const dinos = require('./data/monster.json');
+dotenv.config();
 
 //몽고 DB 연결
 const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
@@ -23,6 +24,12 @@ mongoose.connect(mongoURL, {
 }).catch(err => {
     console.log(err)
 })
+
+// function which returns random number btw min max
+function randomNum(min, max){
+    const randNum = Math.floor(Math.random()*(max-min+1)) + min;
+    return randNum;
+}
 
 //json처리
 app.use(express.urlencoded({ extended: true }));
@@ -104,10 +111,10 @@ app.post('/player/create', setAuth, async (req, res) => {
         } else {
             const player = new Player({
                 name,
-                maxHP: 10,
-                HP: 10,
-                str: 5,
-                def: 5,
+                maxHP: 100,
+                HP: 100,
+                str: randomNum(4,6),
+                def: randomNum(2,5),
                 x: 0,
                 y: 0,
                 email
@@ -266,6 +273,60 @@ app.get('/player/death/:name', setAuth, async (req, res) => {
         res.status(200).json({ msg: "death" })
     } catch (error) {
         res.status(400).json({ error: "DB_ERROR" })
+    }
+})
+
+// battle
+app.post('/player/battle/:name', setAuth, async (req, res) =>{
+    //req에 fieldType받아와야됨
+    const name = req.params.name;
+    const player = await Player.findOne({name});
+    const fieldType = req.fieldtype;
+    let dinoId = 0;
+    if(fieldType === 'green') {
+        dinoId = randomNum(1,2); // 초식공룡
+    } else if (fieldType === 'white') {
+        dinoId = randomNum(3,5);  // 육식공룡
+    } else if (fieldType === 'blue') {
+        dinoId = randomNum(6,7); // 어룡
+    } else if (fieldType === 'yellow') {
+        dinoId = randomNum(8,9); // 익룡
+    }
+    const dino = dinos.filter(e => e.id === dinoId);
+    console.log(dino);
+    let dinoHP =  dino.hp;
+    let playerDamage = await Math.min(dino.str - player.def, 1);
+    let dinoDamage = await Math.min(player.str - dino.def, 1);
+    let result = {
+        description: '야생의' + dino.name + '이(가) 나타났다!!\n'
+    }
+    let turn = 1;
+    while (turn > 0) {
+        result.description += `턴: ${turn}`;
+        if(turn >= 10 || player.HP <= 20) {
+            //도망치기 버튼 활성화
+        }
+        player.incrementHP(-playerDamage);
+        dinoHP -= dinoDamage;
+        await player.save();
+
+        if(player.HP <= 0){
+            result.description += `${dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
+            player.x = 0;
+            player.y = 0;
+            player.HP = player.maxHP;
+            //아이템 잃어버리기
+            await player.save();
+            break;
+        } else if (dinoHP <= 0) {
+            player.incrementExp(dino[exp]);
+            player.item[11] += dino[teeth];
+            await player.save;
+            break;
+        }
+
+        turn++;
+
     }
 })
 
