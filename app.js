@@ -14,6 +14,7 @@ dotenv.config()
 
 //몽고 DB 연결
 const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
+// const mongoURL = process.env.MONGODB_URL
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -120,7 +121,7 @@ app.post('/player/create', setAuth, async (req, res) => {
     }
 })
 
-//플레이어 상태 확인
+//플레이어 상태 확인(신동환)
 app.get('/player/:name', setAuth, async (req, res) => {
     try {
         var name = req.params.name
@@ -139,18 +140,18 @@ app.get('/player/:name', setAuth, async (req, res) => {
     }
 })
 
-//인벤토리 보여주기
+//인벤토리 보여주기(신동환)
 app.get('/player/inventory/:name', setAuth, async (req, res) => {
     try {
         var name = req.params.name
-        var inventory = await Inventory.find().where({ name })
+        // var inventory = await Inventory.find().where({ name })
     } catch (error) {
         console.log(error)
         res.status(400).json({ error: "DB_ERROR" })
     }
 })
 
-//장비 착용,해제, 소비템 사용
+//장비 착용,해제, 소비템 사용(신동환)
 app.post('/player/item', setAuth, async (req, res) => {
     try {
 
