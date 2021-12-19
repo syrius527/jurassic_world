@@ -9,14 +9,14 @@ const cookieParser = require('cookie-parser');
 const { encryptPassword, setAuth } = require("./utils");
 const fs = require('fs')
 const { constantManager, mapManager } = require("./data/Manager");
-const { User, Player } = require('./models');
+const { User, Player, Inventory } = require('./models');
 dotenv.config()
 
 //몽고 DB 연결
-const mongoURL ="mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
-     mongoose.connect(mongoURL, {
-     useNewUrlParser: true,
-     useUnifiedTopology: true,
+const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
+mongoose.connect(mongoURL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
 }).then(() => {
     console.log('MongoDB connected!!!')
 }).catch(err => {
@@ -38,16 +38,16 @@ app.use("/static", express.static(path.join(__dirname, 'public')));
 app.engine("html", require("ejs").renderFile);
 
 //플레이어 선택, 생성 화면
-app.get('/player', setAuth, async(req,
-                                  res) => {
-    if (req.cookies.email != ''){
+app.get('/player', setAuth, async (req,
+    res) => {
+    if (req.cookies.email != '') {
         var email = req.cookies.email
         var players = await Player.find().where({ email })
         res.render("home", { data: { players } })
     } else {
         res.redirect(301, '/')
     }
-    
+
 })
 
 
@@ -83,8 +83,8 @@ app.post('/login', async (req, res) => {
     let header_auth = `Bearer ${user.key}`;
     res.cookie(
         'authorization', header_auth, {
-            maxAge: 1000 * 60 * 30
-        });
+        maxAge: 1000 * 60 * 30
+    });
     res.cookie('email', email, {
         maxAge: 1000 * 60 * 30
     });
@@ -138,6 +138,27 @@ app.get('/player/:name', setAuth, async (req, res) => {
         res.status(400).json({ error: "DB_ERROR" })
     }
 })
+
+//인벤토리 보여주기
+app.get('/player/inventory/:name', setAuth, async (req, res) => {
+    try {
+        var name = req.params.name
+        var inventory = await Inventory.find().where({ name })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ error: "DB_ERROR" })
+    }
+})
+
+//장비 착용,해제, 소비템 사용
+app.post('/player/item', setAuth, async (req, res) => {
+    try {
+
+    } catch (error) {
+
+    }
+})
+
 
 //맵 화면
 app.get('/player/map/:name', setAuth, async (req, res) => {

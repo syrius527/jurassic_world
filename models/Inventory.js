@@ -3,8 +3,10 @@ const { Schema } = mongoose;
 
 
 const schema = new Schema({
-  user:  { type: Schema.Types.ObjectId, ref: "User" },
-  item: [],
+  player:  { type: Schema.Types.ObjectId, ref: "Player" },
+  type: String,
+  itemId: Number,
+  wear: Boolean
 })
 
 const Inventory = mongoose.model("Inventory", schema)
