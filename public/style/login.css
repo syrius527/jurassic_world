@@ -8,15 +8,26 @@ html,body {
     font-size: 30px;
 }
 .login_wrap{
+    position: absolute;
+    top: 200px;
+    right: 600px;
     height: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
 }
+.regist_wrap{
+    position: absolute;
+    top: 200px;
+    right: 600px;
+    height: 100%;
+    display: flex;
+}
+
+
 .button{
     display: flex;
     justify-content: space-between;
 }
+
 .input_form{
     margin-bottom: 10px;
 }
@@ -42,4 +53,12 @@ html,body {
     padding: 10px;
     font-size: 20px;
     cursor: pointer;
+}
+
+.tittle{
+    position: absolute;
+    top: 80px;
+    right: 500px;
+    font-size: 30px;
+    display: flex;
 }

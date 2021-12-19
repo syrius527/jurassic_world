@@ -2,16 +2,24 @@
 <html lang="ko">
 
 <head>
+    <img style="width: 54px; height:50px; top: 5px; float: right"; src="https://user-images.githubusercontent.com/80246502/146648014-9877b90a-4bcd-4510-ba43-43902ac3786c.PNG"; />
+    <div class ="tittle">쥬라기 월드에 오신 것을 환영합니다</div>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/static/style/login.css" rel="stylesheet">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Login</title>
+
 </head>
 
+<style>
+    body{background-image: url('https://user-images.githubusercontent.com/80246502/146550076-ce6158d7-f2a9-4c35-a5e4-425ed22dabc0.PNG')}
+</style>
+
 <body>
-    <div class="login_wrap">
+
+     <div class="login_wrap">
         <div>
             <div class="login_title">Login</div>
             <div class="input_form">
@@ -27,7 +35,7 @@
             </div>
         </div>
         <div id="modal">
-            <div class="login_wrap">
+            <div class="regist_wrap_wrap">
                 <div class="close_btn" onclick="modal_close()">닫기</div>
                 <div>
                     <div class="login_title">Regist</div>
@@ -74,14 +82,13 @@
                 console.log(err)
             })
         }
+
         const modal_open = () => {
             document.getElementById('modal').style.display = 'block'
-            document.querySelector('.login_wrap').style.background = 'rgba(0,0,0,0.75)'
-        }
+            }
         const modal_close = () => {
             document.getElementById('modal').style.display = 'none'
-            document.querySelector('.login_wrap').style.background = '#fff'
-        }
+             }
         const regist_submit = () => {
             var email = document.getElementById('email_j').value
             var password = document.getElementById('password_j').value

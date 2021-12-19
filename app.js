@@ -8,14 +8,15 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const { encryptPassword, setAuth } = require("./utils");
 const fs = require('fs')
+const { constantManager, mapManager } = require("./data/Manager");
 const { User, Player } = require('./models');
 dotenv.config()
 
 //몽고 DB 연결
-const mongoURL = process.env.MONGODB_URL
-mongoose.connect(mongoURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+const mongoURL ="mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
+     mongoose.connect(mongoURL, {
+     useNewUrlParser: true,
+     useUnifiedTopology: true,
 }).then(() => {
     console.log('MongoDB connected!!!')
 }).catch(err => {
@@ -34,9 +35,11 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use("/static", express.static(path.join(__dirname, 'public')));
 
+app.engine("html", require("ejs").renderFile);
 
 //플레이어 선택, 생성 화면
-app.get('/player', setAuth, async(req, res) => {
+app.get('/player', setAuth, async(req,
+                                  res) => {
     if (req.cookies.email != ''){
         var email = req.cookies.email
         var players = await Player.find().where({ email })
@@ -78,8 +81,13 @@ app.post('/login', async (req, res) => {
 
     user.key = encryptPassword(crypto.randomBytes(20));
     let header_auth = `Bearer ${user.key}`;
-    res.cookie('authorization', header_auth);
-    res.cookie('email', email);
+    res.cookie(
+        'authorization', header_auth, {
+            maxAge: 1000 * 60 * 30
+        });
+    res.cookie('email', email, {
+        maxAge: 1000 * 60 * 30
+    });
     await user.save();
     res.status(200).json({ key: user.key });
 })
@@ -132,8 +140,8 @@ app.get('/player/:name', setAuth, async (req, res) => {
 })
 
 //맵 화면
-app.get('/player/map/:name', async (req, res) => {
-    if (req.cookies.auth) {
+app.get('/player/map/:name', setAuth, async (req, res) => {
+    if (req.cookies.authorization) {
         var name = req.params.name
         var player = await Player.findOne({ name })
         res.render("map", { data: { player } })
@@ -141,6 +149,73 @@ app.get('/player/map/:name', async (req, res) => {
         res.redirect(301, '/')
     }
 })
+
+// //아마 map기능
+// app.post("/player/map/:name", setAuth, async (req, res) => {
+//     if (req.cookies.authorization) {
+//         var name = req.params.name
+//         var player = await Player.findOne({ name })
+//         res.render("map", { data: { player } })
+//     } else {
+//         res.redirect(301, '/')
+//     }
+//     let event = null;
+//     let field = null;
+//     let actions = [];
+//     if (action === "query") {
+//         field = mapManager.getField(req.player.x, req.player.y);
+//     } else if (action === "move") {
+//         const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
+//         let x = req.player.x;
+//         let y = req.player.y;
+//         if (direction === 0) {
+//             y -= 1;
+//         } else if (direction === 1) {
+//             x += 1;
+//         } else if (direction === 2) {
+//             y += 1;
+//         } else if (direction === 3) {
+//             x -= 1;
+//         } else {
+//             res.sendStatus(400);
+//         }
+//         field = mapManager.getField(x, y);
+//         if (!field) res.sendStatus(400);
+//         player.x = x;
+//         player.y = y;
+//
+//         const events = field.events;
+//         const actions = [];
+//         if (events.length > 0) {
+//             // TODO : 확률별로 이벤트 발생하도록 변경
+//             const _event = events[0];
+//             if (_event.type === "battle") {
+//                 // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
+//
+//                 event = { description: "늑대와 마주쳐 싸움을 벌였다." };
+//                 player.incrementHP(-1);
+//             } else if (_event.type === "item") {
+//                 event = { description: "포션을 획득해 체력을 회복했다." };
+//                 player.incrementHP(1);
+//                 player.HP = Math.min(player.maxHP, player.HP + 1);
+//             }
+//         }
+//
+//         await player.save();
+//     }
+//
+//     field.canGo.forEach((direction, i) => {
+//         if (direction === 1) {
+//             actions.push({
+//                 url: "/action",
+//                 text: i,
+//                 params: { direction: i, action: "move" }
+//             });
+//         }
+//     });
+//
+//     return res.send({ player, field, event, actions });
+// });
 
 
 //맵이동 (아이템획득시 스탯 업데이트, 도망가기)

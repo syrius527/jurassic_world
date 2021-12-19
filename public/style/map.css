@@ -1,0 +1,28 @@
+#modal {
+    display: none;
+    width: 600px;
+    height: 400px;
+    background: #fff;
+    position: absolute;
+    border: 1px solid #f7f7f7;
+}
+
+.map_btn {
+    height: 100%;
+    display: flex;
+    position: absolute;
+    top: 80px;
+    flex-direction: column;
+    right: 0px;
+    cursor: pointer;
+}
+
+
+.mapclose_btn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
