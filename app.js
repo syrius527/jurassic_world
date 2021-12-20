@@ -165,7 +165,7 @@ app.get('/player/inventory/:name', setAuth, async (req, res) => {
 })
 
 //장비 착용 해제, 소비템 사용
-app.post('/player/item', async (req, res) => {
+app.post('/player/item', setAuth, async (req, res) => {
     try {
         var name = req.body.name
         var item = req.body.item
@@ -203,14 +203,14 @@ app.post('/player/item', async (req, res) => {
             console.log(inventory)
             console.log('방어 장비 장착/해제')
         } else if (item.type === 'consumption') {
-            if(item.hp === item.maxHP) {
+            if (item.hp === item.maxHP) {
                 console.log('max 체력, 회복 불가')
             } else {
                 var hp = item.hp
                 player.hp += hp
-                if(player.hp > player.maxHP) player.hp = player.maxHP
-                inventory.cnt --
-                if(inventory.cnt === 0) delete inventory
+                if (player.hp > player.maxHP) player.hp = player.maxHP
+                inventory.cnt--
+                if (inventory.cnt === 0) delete inventory
                 await player.save()
                 await inventory.save()
             }
@@ -371,19 +371,19 @@ function getRandomMonsterId(terrainType) {
     return pickRandom(monsterIds);
 }
 
-*/ 
+*/
 
 //맵 화면
 app.get('/player/map/:name', setAuth, async (req, res) => {
     if (req.cookies.authorization) {
         var name = req.params.name;
         var player = await Player.findOne({ name });
-        console.log('player',player,name);
-        const mapTile=mapManager.getField(0,0);
+        console.log('player', player, name);
+        const mapTile = mapManager.getField(0, 0);
         //const mapTile=mapManager.getField(player.x,player.y);
-        const monsterId=getRandomMonsterId(mapTile.monster);
+        const monsterId = getRandomMonsterId(mapTile.monster);
         //console.log(monsterId);
-        const monster=monsterManager.getMonster(monsterId);
+        const monster = monsterManager.getMonster(monsterId);
         res.render("map", { data: { player, monster, mapTile } });
     } else {
         res.redirect(301, '/')
