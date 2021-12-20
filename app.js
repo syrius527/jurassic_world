@@ -80,8 +80,9 @@ app.post('/register', async (req, res) => {
         res.render('login')
     })
 
-app.get('/game', (req, res) => {
-    res.render("game")
+app.get('/game/:name', (req, res) => {
+    const name = req.params.name;
+    res.render("game", {data: name})
 
 })
 
@@ -256,10 +257,10 @@ app.get('/player/map/:name', setAuth, async (req, res) => {
 
 //아마 map기능
 app.post('/action', setAuth, async (req, res) => {
-    const { action } = req.body;
+    const { action, name } = req.body;
     const user = req.user;
     const email = user.email
-    const player = await Player.findOne({ email })
+    const player = await Player.findOne({ name })
 
     let event = null;
     let field = null;
@@ -281,6 +282,7 @@ app.post('/action', setAuth, async (req, res) => {
         } else {
             res.sendStatus(400);
         }
+
         field = mapManager.getField(x, y);
         if (!field) res.sendStatus(400);
 

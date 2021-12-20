@@ -22,6 +22,7 @@
     </div>
 </div>
 
+<div id = "name"><%= data%></div>
 
 <div id="status">
     <div id="position"></div>
@@ -42,6 +43,7 @@
 </div>
 
 <script>
+
     const modal_open = () => {
         document.getElementById('modal').style.display = 'block'
     }
@@ -54,6 +56,7 @@
     if (!key) {
         location.href = "/";
     }
+    const name =document.getElementById("name").innerText;
 
     const sendAction = (url, params = {}) => {
         $.ajax({
@@ -62,7 +65,7 @@
                 Authorization: "Bearer " + key
             },
             method: "POST",
-            data:  params
+            data: params
         }).done((req) => {
             const { player, field, event, actions } = req;
 
@@ -94,7 +97,7 @@
     }
 
 
-    sendAction("/action", {action: 'query'});
+    sendAction("/action", {action: 'query', name: name});
 
 
 
