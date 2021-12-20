@@ -35,14 +35,7 @@
     <div id="event_result"></div>
 
 
-    <div class = "game_description">
-        <div id="control">
-            <button value="1">동쪽으로 이동한다.</button>
-            <button value="3">서쪽으로 이동한다.</button>
-            <button value="2">남쪽으로 이동한다.</button>
-            <button value="0">북쪽으로 이동한다.</button>
-        </div>
-    </div>
+
 
     <div class="button"></div>>
 
@@ -70,50 +63,6 @@
             location.href = "/";
         }
 
-        // const sendAction = (url, params = {}) => {
-        //     $.ajax({
-        //         url,
-        //         headers: {
-        //             Authorization: "Bearer " + key
-        //         },
-        //         method: "POST",
-        //         data: $.param(params),
-        //     }).done((req) => {
-        //         const {player, field, event, actions} = req;
-        //
-        //         $('#game').text(field.description);
-        //         $('#position').text(`(${field.x},${field.y})`);
-        //
-        //         const x = field.x;
-        //         const y = field.y;
-        //
-        //         $('#control').html('');
-        //         req.actions.forEach((action) => {
-        //             const dom = $('<button></button');
-        //             dom.text(action.text);
-        //             dom.bind('click', function () {
-        //                 sendAction(action.url, action.params);
-        //             });
-        //
-        //             $('#control').append(dom);
-        //         })
-        //
-        //         if (event) {
-        //             $('#event_result').text(event.description);
-        //         } else {
-        //             $('#event_result').text("아무일도 일어나지 않았다.");
-        //         }
-        //
-        //         $('#HP').text(`${player.HP} / ${player.maxHP}`)
-        //
-        //     })
-        // }
-        // var name = document.getElementById('name').value
-        // sendAction(`/player/map/${name}`, {action: 'query'});
-        //
-        //
-
-
 
         const modal_open = () => {
             document.getElementById('modal').style.display = 'block'
@@ -126,12 +75,6 @@
 
 
 
-        //const modal_open = () => {
-        //    document.getElementById('modal').style.display = 'block'
-        //}
-        //const modal_close = () => {
-        //    document.getElementById('modal').style.display = 'none'
-        //}
         var name = window.location.href
         axios.get(`/player/${name.split('/')[5]}`)
             .then(res => {
