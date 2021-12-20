@@ -49,6 +49,13 @@
     "str": 15
   },
   {
+    "id": 8,
+    "type": "armor",
+    "name": "천갑옷",
+    "description": "천으로 만들어진 갑옷. 매우 허름하다.",
+    "def": 1
+  },
+  {
     "id": 9,
     "type": "armor",
     "name": "가죽갑옷",

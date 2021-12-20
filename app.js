@@ -11,6 +11,7 @@ const { encryptPassword, setAuth } = require("./utils");
 const fs = require('fs');
 const { constantManager, mapManager } = require("./data/Manager");
 const { User, Player, Inventory } = require('./models');
+const items = require('./data/items.json');
 const dinos = require('./data/monster.json');
 dotenv.config();
 
@@ -257,7 +258,7 @@ app.get('/player/map/:name', setAuth, async (req, res) => {
 
 //아마 map기능
 app.post('/action/:name', setAuth, async (req, res) => {
-    const { action} = req.body;
+    const { action } = req.body;
     const name = req.params.name;
     const user = req.user;
     const email = user.email
@@ -289,6 +290,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
         player.x = x;
         player.y = y;
+        await player.save();
 
         const events = field.events;
         const actions = [];
@@ -297,13 +299,72 @@ app.post('/action/:name', setAuth, async (req, res) => {
             const _event = events[0];
             if (_event.type === "battle") {
                 // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
+                const _dino = dinos.filter(function(e) {
+                    return e.id === _event.monster;
+                })[0];
+                //event = { description: `${_dino.name}와(과) 마주쳐 싸움을 벌였다.`};
 
-                event = { description: "늑대와 마주쳐 싸움을 벌였다." };
-                player.incrementHP(-1);
+                let dinoHP = _dino.hp;
+                const playerStr = player.str + player.itemStr;
+                const playerDef = player.def + player.itemDef;
+                let playerDamage = Math.max(_dino.str - playerDef, 1);
+                let dinoDamage = Math.max(playerStr - _dino.def, 1);
+                event = {
+                    description: '야생의 ' + _dino.name + '이(가) 나타났다!!\n'
+                }
+                //let turn = 1;
+                //while (turn < 10 && player.HP > 20)
+                for (let turn = 1; turn > 0 ; turn++) {
+                    event.description += `${turn}턴, `;
+                    player.incrementHP(-playerDamage);
+                    dinoHP -= dinoDamage;
+                    console.log(dinoHP);
+                    await player.save();
+
+                    if (player.HP <= 0) {
+                        event.description += `${_dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
+                        player.x = 0;
+                        player.y = 0;
+                        player.HP = player.maxHP;
+                        //아이템 잃어버리기
+                        await player.save();
+                        break;
+                    } else if (dinoHP <= 0) {
+                        event.description += `${_dino.name}을 쓰러뜨렸습니다!\n 경험치를 ${_dino.exp} 획득하였습니다!`;
+                        //경험치 획득 및 레벨업
+                        player.exp += _dino.exp;
+                        if(player.exp > 10) {
+                            let lvUp = parseInt(player.exp/10);
+                            for (let i=lvUp; i>0; i--) {
+                                player.exp -= 10;
+                                player.level += 1;
+                                let strUp = Math.floor(Math.random()*(3)) + 2;
+                                let defUp = Math.floor(Math.random()*(4)) + 2;
+                                player.str += strUp;
+                                player.def += defUp;
+                                event.description += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다.`;
+                            }
+                        }
+                        player.teeth += _dino.teeth;
+                        await player.save();
+                        break;
+                    }
+                }
             } else if (_event.type === "item") {
-                event = { description: "포션을 획득해 체력을 회복했다." };
-                player.incrementHP(1);
-                player.HP = Math.min(player.maxHP, player.HP + 1);
+                const _item = items.filter(function(e) {
+                    return e.id === _event.item;
+                })[0];
+                if(_item.type === "attack") {
+                    event = { description: _item.description };
+                    //add to inventory
+                } else if(_item.type === "armor") {
+                    event = { description: _item.description };
+                    //add to inventory
+                } else {
+                    event = { description: '아무 일도 일어나지 않았다.' };
+                }
+            } else if (_event.type === "heal") {
+                player.incrementHP(30);
             }
         }
 
