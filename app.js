@@ -14,8 +14,8 @@ const dinos = require('./data/monster.json');
 dotenv.config();
 
 //몽고 DB 연결
-// const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
-const mongoURL = process.env.MONGODB_URL
+const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
+// const mongoURL = process.env.MONGODB_URL
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -128,9 +128,8 @@ app.get('/player/:name', setAuth, async (req, res) => {
         var HP = player.HP
         var str = player.str
         var def = player.def
-        var x = player.x
-        var y = player.y
-        res.status(200).json({ level, exp, maxHP, HP, str, def, x, y })
+        var data = { level, exp, maxHP, HP, str, def }
+        res.status(200).json(data)
     } catch (error) {
         res.status(400).json({ error: "DB_ERROR" })
     }
@@ -140,8 +139,25 @@ app.get('/player/:name', setAuth, async (req, res) => {
 app.get('/player/inventory/:name', setAuth, async (req, res) => {
     try {
         var name = req.params.name
-        // var inventory = await Inventory.find().where({ name })
-        res.status(200).json({})
+        var inventory = await Inventory.find().where({ name })
+        var items = []
+        var cnt = 0
+        var item = {}
+        var wear = false
+        var item_list = fs.readFileSync('./data/items.json', 'utf8')
+        item_list = JSON.parse(item_list)
+        for (var i = 0; i < inventory.length; i++) {
+            var cnt = inventory[i].cnt
+            var wear = inventory[i].wear
+            var itemId = inventory[i].itemId
+            item_list.forEach( o => {
+                if(o.id === itemId) {
+                    item = o
+                }
+            })
+            items[i] = {item, cnt, wear}
+        }
+        res.status(200).json(items)
     } catch (error) {
         console.log(error)
         res.status(400).json({ error: "DB_ERROR" })
@@ -151,7 +167,10 @@ app.get('/player/inventory/:name', setAuth, async (req, res) => {
 //장비 착용,해제, 소비템 사용(신동환)
 app.post('/player/item', setAuth, async (req, res) => {
     try {
-
+        var name = req.body.name
+        var item = req.body.item
+        var wear = req.body.wear
+        var item_list = fs.readFileSync('./data/items.json', 'utf8')
     } catch (error) {
 
     }
@@ -159,25 +178,24 @@ app.post('/player/item', setAuth, async (req, res) => {
 
 
 //아이템 획득 (임시)
-app.post('/player/item/gain', setAuth, async (req, res) => {
-    try {
-        var name = req.body.name
-        var itemId = req.body.itemId
-        var wear = false
-        item = new Inventory({ name: name, itemId: itemId, wear: wear });
-        await item.save()
-        res.status(200).json({ msg: 'success' })
-    } catch (error) {
-        console.log(error)
-        res.status(400).json({ error: "DB_ERROR" })
-    }
-})
+// app.post('/player/item/gain', async (req, res) => {
+//     try {
+//         var name = req.body.name
+//         var itemId = req.body.itemId
+//         var cnt = req.body.cnt
+//         var wear = false
+//         item = new Inventory({ name: name, itemId: itemId, cnt: cnt, wear: wear });
+//         await item.save()
+//         res.status(200).json({ msg: 'success' })
+//     } catch (error) {
+//         console.log(error)
+//         res.status(400).json({ error: "DB_ERROR" })
+//     }
+// })
 
 
 //맵 화면 (임시)
 app.get('/player/map/:name', setAuth, async (req, res) => {
-    // var name = req.params.name
-    // var player = await Player.findOne({ name })
     res.render("map")
 })
 

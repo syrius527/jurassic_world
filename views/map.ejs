@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-    <img style="width: 54px; height:50px; top: 0px; float: right"; src="https://user-images.githubusercontent.com/80246502/146648014-9877b90a-4bcd-4510-ba43-43902ac3786c.PNG" ; />
+    <img style="width: 54px; height:50px; top: 0px; float: right" ;
+        src="https://user-images.githubusercontent.com/80246502/146648014-9877b90a-4bcd-4510-ba43-43902ac3786c.PNG" ; />
     <link href="/static/style/map.css" rel="stylesheet">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <meta charset="UTF-8">
@@ -10,6 +12,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
+
 <body>
     <!-- <div class="button">
       <div class="map_btn" onclick="modal_open()">맵 보기</div>
@@ -21,10 +24,10 @@
 
     <div class="info">
         <div class="player_info">
-            
+
         </div>
         <div class="inventory_info">
-
+            
         </div>
     </div>
 
@@ -37,11 +40,21 @@
         //}
         var name = window.location.href
         axios.get(`/player/${name.split('/')[5]}`)
-        .then(res => {
-            console.log(res.data)
-        }).catch (err => {
-            console.log(err)
-        })
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+
+        axios.get(`/player/inventory/${name.split('/')[5]}`)
+            .then(res => {
+                console.log(res.data)
+            })
+            .catch(err => {
+                console.log(err)
+            })
     </script>
 </body>
+
 </html>
