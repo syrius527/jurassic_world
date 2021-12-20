@@ -40,7 +40,7 @@ html,body {
 
 #modal {
     display: none;
-    width: 600px;
+    width: 400px;
     height: 400px;
     background: #fff;
     position: absolute;

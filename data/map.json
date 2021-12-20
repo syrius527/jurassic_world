@@ -1,130 +1,27 @@
-[
-    {
-        "x": 0,
-        "y": 0,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 0,
-        "y": 1,
-        "type": "battle",
-        "item": 0,
-        "monster": 1,
-        "content": "거대한 웜이 나타났습니다."
-    },
-    {
-        "x": 0,
-        "y": 2,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "고요한 평원에 도착했다."
-    },
-    {
-        "x": 0,
-        "y": 3,
-        "type": "item",
-        "item": 1001,
-        "monster": 0,
-        "content": "천갑옷을 획득 하였습니다."
-    },
-    {
-        "x": 1,
-        "y": 0,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": ""
-    },
-    {
-        "x": 1,
-        "y": 1,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 1,
-        "y": 2,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 1,
-        "y": 3,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 2,
-        "y": 0,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 2,
-        "y": 1,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 2,
-        "y": 2,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 2,
-        "y": 3,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 3,
-        "y": 0,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 3,
-        "y": 1,
-        "type": null,
-        "item": 0,
-        "monster": 0,
-        "content": "모험이 시작 되었습니다."
-    },
-    {
-        "x": 3,
-        "y": 2,
-        "type": "item",
-        "item": 3,
-        "monster": 0,
-        "content": "강철검을 획득 하였습니다."
-    },
-    {
-        "x": 3,
-        "y": 3,
-        "type": "battle",
-        "item": 0,
-        "monster": 5,
-        "content": "포악한 곰이 나타났습니다. "
-    }
-]
+{
+    "id": 1,
+    "fields": [
+        [0, 0, "평원의 시작점이다.", [0, 1, 1, 0], []],
+        [
+            1,
+            0,
+            "왠지 몬스터가 나올 것 같은 그런 스산한 분위기가 느껴진다.",
+            [0, 0, 1, 1],
+            [
+                { "type": "battle", "monster": 1, "percent": 70 },
+                { "type": "item", "item": 1, "percent": 30 }
+            ]
+        ],
+        [
+            0,
+            1,
+            "행운이 찾아올 것 같다.",
+            [1, 1, 0, 0],
+            [
+                { "type": "item", "item": 1, "percent": 70 },
+                { "type": "battle", "enemy": 1, "percent": 30 }
+            ]
+        ],
+        [1, 1, "아무것도 없다.", [1, 0, 0, 1], [], []]
+    ]
+}

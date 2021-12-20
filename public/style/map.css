@@ -1,12 +1,21 @@
 #modal {
     display: none;
-    width: 600px;
+    position: absolute;
+    top: 100px;
+    right: 400px;
+    width: 800px;
     height: 400px;
     background: #fff;
-    position: absolute;
     border: 1px solid #f7f7f7;
 }
 
+.game_description{
+    position: absolute;
+    width: 95%;
+    height: 400px;
+    bottom:50px;
+    border: solid black;
+}
 .map_btn {
     height: 100%;
     display: flex;

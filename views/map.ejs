@@ -1,29 +1,106 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
     <img style="width: 54px; height:50px; top: 0px; float: right"; src="https://user-images.githubusercontent.com/80246502/146648014-9877b90a-4bcd-4510-ba43-43902ac3786c.PNG" ; />
     <link href="/static/style/map.css" rel="stylesheet">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>게임 중</title>
 </head>
 <body>
+    <div id="position"></div>
+<!--    <div id="name"><%= data.player['name']%></div>-->
+<!--    <div id="status">-->
+    <!--        <div id="HP">  HP: <%= data.player['HP']%> / <%= data.player['maxHP'] %></div>-->
+    <!--        <div id="Location"> 위치: (<%= data.player['x']%>, <%= data.player['y'] %>)</div>-->
+    <!--    </div>-->
+
+    <div id="game"></div>
+    <div id="event_result"></div>
+
+
+    <div class = "game_description">
+        <div id="control">
+            <button value="1">동쪽으로 이동한다.</button>
+            <button value="3">서쪽으로 이동한다.</button>
+            <button value="2">남쪽으로 이동한다.</button>
+            <button value="0">북쪽으로 이동한다.</button>
+        </div>
+    </div>
+
     <div class="button">
       <div class="map_btn" onclick="modal_open()">맵 보기</div>
      </div>
     <div id="modal" >
-        <img style="width: 500px; height:600px; top: 5px;"; src="https://user-images.githubusercontent.com/80246502/146661714-664bde9b-0317-49cd-83e9-bc3b1b33341d.PNG"; />
+        <img style="width: 700px; height:600px; top: 5px;"; src="https://user-images.githubusercontent.com/80246502/146661714-664bde9b-0317-49cd-83e9-bc3b1b33341d.PNG"; />
         <div class="mapclose_btn" onclick="modal_close()"> 닫기</div>
     </div>
+
     <script>
+        const key = localStorage.getItem('key');
+        if (!key) {
+            location.href = "/";
+        }
+
+        // const sendAction = (url, params = {}) => {
+        //     $.ajax({
+        //         url,
+        //         headers: {
+        //             Authorization: "Bearer " + key
+        //         },
+        //         method: "POST",
+        //         data: $.param(params),
+        //     }).done((req) => {
+        //         const {player, field, event, actions} = req;
+        //
+        //         $('#game').text(field.description);
+        //         $('#position').text(`(${field.x},${field.y})`);
+        //
+        //         const x = field.x;
+        //         const y = field.y;
+        //
+        //         $('#control').html('');
+        //         req.actions.forEach((action) => {
+        //             const dom = $('<button></button');
+        //             dom.text(action.text);
+        //             dom.bind('click', function () {
+        //                 sendAction(action.url, action.params);
+        //             });
+        //
+        //             $('#control').append(dom);
+        //         })
+        //
+        //         if (event) {
+        //             $('#event_result').text(event.description);
+        //         } else {
+        //             $('#event_result').text("아무일도 일어나지 않았다.");
+        //         }
+        //
+        //         $('#HP').text(`${player.HP} / ${player.maxHP}`)
+        //
+        //     })
+        // }
+        // var name = document.getElementById('name').value
+        // sendAction(`/player/map/${name}`, {action: 'query'});
+        //
+        //
+
+
+
         const modal_open = () => {
             document.getElementById('modal').style.display = 'block'
         }
+
         const modal_close = () => {
             document.getElementById('modal').style.display = 'none'
         }
+
+
+
+
     </script>
 </body>
 </html>
