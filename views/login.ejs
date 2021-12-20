@@ -67,16 +67,8 @@
                 email,
                 password
             }).then(res => {
-                var key = res.data.key
                 alert('로그인 성공!')
-                localStorage.setItem('key', key)
-                axios.get('/player', {
-                    headers: { authorization: `Bearer ${key}` }
-                }).then((res) => {
-                    window.location = '/player'
-                }).catch(err => {
-                    console.log(err)
-                })
+                window.location.href = '/player'
             }).catch(err => {
                 alert('이메일 또는 패스워드 불일치')
                 console.log(err)

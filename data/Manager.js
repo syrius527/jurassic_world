@@ -37,8 +37,7 @@ const constantManager = new ConstantManager(
 const mapManager = new MapManager(
     JSON.parse(fs.readFileSync(__dirname + "/map.json"))
 );
-
 module.exports = {
     constantManager,
-    mapManager
+    mapManager,
 };
