@@ -256,8 +256,9 @@ app.get('/player/map/:name', setAuth, async (req, res) => {
 
 
 //아마 map기능
-app.post('/action', setAuth, async (req, res) => {
-    const { action, name } = req.body;
+app.post('/action/:name', setAuth, async (req, res) => {
+    const { action} = req.body;
+    const name = req.params.name;
     const user = req.user;
     const email = user.email
     const player = await Player.findOne({ name })
@@ -313,7 +314,7 @@ app.post('/action', setAuth, async (req, res) => {
     field.canGo.forEach((direction, i) => {
         if (direction === 1) {
             actions.push({
-                url: "/action",
+                url: `/action/${name}`,
                 text: i,
                 params: { direction: i, action: "move" }
             });
