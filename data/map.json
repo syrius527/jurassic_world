@@ -1,3 +1,4 @@
+//<<<<<<< HEAD
 {
     "id": 1,
     "fields": [
@@ -25,3 +26,823 @@
         [1, 1, "아무것도 없다.", [1, 0, 0, 1], [], []]
     ]
 }
+
+//[
+//    {
+//        "x": 0,
+//        "y": 0,
+//        "type": null,
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작됐다."
+//    },
+//    {
+//        "x": 0,
+//        "y": 1,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "거대한 웜이 나타났다."
+//    },
+//    {
+//        "x": 0,
+//        "y": 2,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 1,
+//        "content": "고요한 평원에 도착했다."
+//    },
+//    {
+//        "x": 0,
+//        "y": 3,
+//        "type": "item",
+//        "fieldType": "green",
+//        "item": 1001,
+//        "monster": 1,
+//        "content": "천갑옷을 획득했다."
+//    }, {
+//        "x": 0,
+//        "y": 4,
+//        "type": "item",
+//        "fieldType": "green",
+//        "item": 1001,
+//        "monster": 1,
+//        "content": "천갑옷을 획득했다."
+//    }, {
+//        "x": 0,
+//        "y": 5,
+//        "type": "item",
+//        "fieldType": "yellow",
+//        "item": 1001,
+//        "monster": 1,
+//        "content": "천갑옷을 획득했다."
+//    }, {
+//        "x": 0,
+//        "y": 6,
+//        "type": "item",
+//        "fieldType": "yellow",
+//        "item": 1001,
+//        "monster": 1,
+//        "content": "천갑옷을 획득했다."
+//    }, {
+//        "x": 0,
+//        "y": 7,
+//        "type": "item",
+//        "fieldType": "yellow",
+//        "item": 1001,
+//        "monster": 1,
+//        "content": "천갑옷을 획득했다."
+//    },{
+//        "x": 0,
+//        "y": 8,
+//        "type": "item",
+//        "fieldType": "yellow",
+//        "item": 1001,
+//        "monster": 1,
+//        "content": "천갑옷을 획득했다."
+//    },{
+//        "x": 0,
+//        "y": 9,
+//        "type": "item",
+//        "fieldType": "yellow",
+//        "item": 1001,
+//        "monster": 1,
+//        "content": "천갑옷을 획득했다."
+//    },
+//
+//    {
+//        "x": 1,
+//        "y": 0,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 1,
+//        "content": "고요한 평원에 도착했다"
+//    },
+//    {
+//        "x": 1,
+//        "y": 1,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 1,
+//        "content": ""
+//    },
+//    {
+//        "x": 1,
+//        "y": 2,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 1,
+//        "y": 3,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },{
+//        "x": 1,
+//        "y": 4,
+//        "type": null,
+//        "fieldType": "white",,
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },{
+//        "x": 1,
+//        "y": 5,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },{
+//        "x": 1,
+//        "y": 6,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },{
+//        "x": 1,
+//        "y": 7,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },{
+//        "x": 1,
+//        "y": 8,
+//        "type": null,
+//         "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },{
+//        "x": 1,
+//        "y": 9,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 2,
+//        "y": 0,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 2,
+//        "y": 1,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 2,
+//        "y": 2,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 2,
+//        "y": 3,
+//        "type": null,
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    }, {
+//        "x": 2,
+//        "y": 4,
+//        "type": null,
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    }, {
+//        "x": 2,
+//        "y": 5,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    }, {
+//        "x": 2,
+//        "y": 6,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    }, {
+//        "x": 2,
+//        "y": 7,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    }, {
+//        "x": 2,
+//        "y": 8,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    }, {
+//        "x": 2,
+//        "y": 9,
+//        "type": null,
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 3,
+//        "y": 0,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 3,
+//        "y": 1,
+//        "type": null,
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 0,
+//        "content": "모험이 시작 되었습니다."
+//    },
+//    {
+//        "x": 3,
+//        "y": 2,
+//        "type": "item",
+//        "fieldType": "white",
+//        "item": 3,
+//        "monster": 0,
+//        "content": "강철검을 획득 하였습니다."
+//    },
+//    {
+//        "x": 3,
+//        "y": 3,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 3,
+//        "y": 4,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 3,
+//        "y": 5,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 3,
+//        "y": 6,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 3,
+//        "y": 7,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 3,
+//        "y": 8,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 3,
+//        "y": 9,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 0,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 1,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 2,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 3,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 4,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 5,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 6,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 7,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 8,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 4,
+//        "y": 9,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 0,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 1,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 2,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 3,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 4,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 5,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 6,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 7,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 8,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 5,
+//        "y": 9,
+//        "type": "battle",
+//        "fieldType": "yellow",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 0,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 1,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 2,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 3,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 4,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 5,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 6,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 7,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 8,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 6,
+//        "y": 9,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 0,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 1,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 2,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 3,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 4,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 5,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 6,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 7,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 8,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 7,
+//        "y": 9,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 0,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 1,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 2,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 3,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 4,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 5,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 6,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 7,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 8,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 8,
+//        "y": 9,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 0,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 1,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 2,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 3,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 4,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 5,
+//        "type": "battle",
+//        "fieldType": "blue",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 6,
+//        "type": "battle",
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 7,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 5,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 8,
+//        "type": "battle",
+//        "fieldType": "green",
+//        "item": 0,
+//        "monster": 1,
+//        "content": "포악한 곰이 나타났습니다. "
+//    },{
+//        "x": 9,
+//        "y": 9,
+//        "type": null,
+//        "fieldType": "white",
+//        "item": 0,
+//        "monster": null,
+//        "content": "안전하게 탈출에 성공하였습니다. "
+//    }
+//]
