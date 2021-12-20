@@ -19,9 +19,7 @@
         <div class="card_list">
             <% for (var i=0; i < data.players.length; i++) { %>
                 <div class="card" onclick="select_player(this)">
-                    <div id="unique" style="display: none;">
-                        <%= data.players[i].name %>
-                    </div>
+                    <div id="unique" style="display: none;"><%= data.players[i].name %></div>
                     <div class="name">플레이어 : <%= data.players[i].name %>
                     </div>
                     <div class="level">레벨 : <%= data.players[i].level %>

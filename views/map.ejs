@@ -7,23 +7,41 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Document</title>
 </head>
 <body>
-    <div class="button">
+    <!-- <div class="button">
       <div class="map_btn" onclick="modal_open()">맵 보기</div>
      </div>
     <div id="modal" >
         <img style="width: 500px; height:600px; top: 5px;"; src="https://user-images.githubusercontent.com/80246502/146661714-664bde9b-0317-49cd-83e9-bc3b1b33341d.PNG"; />
         <div class="mapclose_btn" onclick="modal_close()"> 닫기</div>
+    </div> -->
+
+    <div class="info">
+        <div class="player_info">
+            
+        </div>
+        <div class="inventory_info">
+
+        </div>
     </div>
+
     <script>
-        const modal_open = () => {
-            document.getElementById('modal').style.display = 'block'
-        }
-        const modal_close = () => {
-            document.getElementById('modal').style.display = 'none'
-        }
+        //const modal_open = () => {
+        //    document.getElementById('modal').style.display = 'block'
+        //}
+        //const modal_close = () => {
+        //    document.getElementById('modal').style.display = 'none'
+        //}
+        var name = window.location.href
+        axios.get(`/player/${name.split('/')[5]}`)
+        .then(res => {
+            console.log(res.data)
+        }).catch (err => {
+            console.log(err)
+        })
     </script>
 </body>
 </html>

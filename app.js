@@ -14,8 +14,8 @@ const dinos = require('./data/monster.json');
 dotenv.config();
 
 //몽고 DB 연결
-const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
-// const mongoURL = process.env.MONGODB_URL
+// const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
+const mongoURL = process.env.MONGODB_URL
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -26,8 +26,8 @@ mongoose.connect(mongoURL, {
 })
 
 // function which returns random number btw min max
-function randomNum(min, max){
-    const randNum = Math.floor(Math.random()*(max-min+1)) + min;
+function randomNum(min, max) {
+    const randNum = Math.floor(Math.random() * (max - min + 1)) + min;
     return randNum;
 }
 
@@ -46,16 +46,10 @@ app.use("/static", express.static(path.join(__dirname, 'public')));
 app.engine("html", require("ejs").renderFile);
 
 //플레이어 선택, 생성 화면
-app.get('/player', setAuth, async (req,
-    res) => {
-    if (req.cookies.email != '') {
-        var email = req.cookies.email
-        var players = await Player.find().where({ email })
-        res.render("home", { data: { players } })
-    } else {
-        res.redirect(301, '/')
-    }
-
+app.get('/', setAuth, async (req, res) => {
+    var email = req.cookies.email
+    var players = await Player.find().where({ email })
+    res.render("home", { data: { players } })
 })
 
 
@@ -74,7 +68,7 @@ app.post('/register', async (req, res) => {
 })
 
 //로그인 페이지
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {
     res.render('login')
 })
 
@@ -89,13 +83,8 @@ app.post('/login', async (req, res) => {
 
     user.key = encryptPassword(crypto.randomBytes(20));
     let header_auth = `Bearer ${user.key}`;
-    res.cookie(
-        'authorization', header_auth, {
-        maxAge: 1000 * 60 * 30
-    });
-    res.cookie('email', email, {
-        maxAge: 1000 * 60 * 30
-    });
+    res.cookie('authorization', header_auth);
+    res.cookie('email', email);
     await user.save();
     res.status(200).json({ key: user.key });
 })
@@ -113,8 +102,8 @@ app.post('/player/create', setAuth, async (req, res) => {
                 name,
                 maxHP: 100,
                 HP: 100,
-                str: randomNum(4,6),
-                def: randomNum(2,5),
+                str: randomNum(4, 6),
+                def: randomNum(2, 5),
                 x: 0,
                 y: 0,
                 email
@@ -152,6 +141,7 @@ app.get('/player/inventory/:name', setAuth, async (req, res) => {
     try {
         var name = req.params.name
         // var inventory = await Inventory.find().where({ name })
+        res.status(200).json({})
     } catch (error) {
         console.log(error)
         res.status(400).json({ error: "DB_ERROR" })
@@ -168,15 +158,27 @@ app.post('/player/item', setAuth, async (req, res) => {
 })
 
 
-//맵 화면
-app.get('/player/map/:name', setAuth, async (req, res) => {
-    if (req.cookies.authorization) {
-        var name = req.params.name
-        var player = await Player.findOne({ name })
-        res.render("map", { data: { player } })
-    } else {
-        res.redirect(301, '/')
+//아이템 획득 (임시)
+app.post('/player/item/gain', setAuth, async (req, res) => {
+    try {
+        var name = req.body.name
+        var itemId = req.body.itemId
+        var wear = false
+        item = new Inventory({ name: name, itemId: itemId, wear: wear });
+        await item.save()
+        res.status(200).json({ msg: 'success' })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ error: "DB_ERROR" })
     }
+})
+
+
+//맵 화면 (임시)
+app.get('/player/map/:name', setAuth, async (req, res) => {
+    // var name = req.params.name
+    // var player = await Player.findOne({ name })
+    res.render("map")
 })
 
 // //아마 map기능
@@ -277,24 +279,24 @@ app.get('/player/death/:name', setAuth, async (req, res) => {
 })
 
 // battle
-app.post('/player/battle/:name', setAuth, async (req, res) =>{
+app.post('/player/battle/:name', setAuth, async (req, res) => {
     //req에 fieldType받아와야됨
     const name = req.params.name;
-    const player = await Player.findOne({name});
+    const player = await Player.findOne({ name });
     const fieldType = req.fieldtype;
     let dinoId = 0;
-    if(fieldType === 'green') {
-        dinoId = randomNum(1,2); // 초식공룡
+    if (fieldType === 'green') {
+        dinoId = randomNum(1, 2); // 초식공룡
     } else if (fieldType === 'white') {
-        dinoId = randomNum(3,5);  // 육식공룡
+        dinoId = randomNum(3, 5);  // 육식공룡
     } else if (fieldType === 'blue') {
-        dinoId = randomNum(6,7); // 어룡
+        dinoId = randomNum(6, 7); // 어룡
     } else if (fieldType === 'yellow') {
-        dinoId = randomNum(8,9); // 익룡
+        dinoId = randomNum(8, 9); // 익룡
     }
     const dino = dinos.filter(e => e.id === dinoId);
     console.log(dino);
-    let dinoHP =  dino.hp;
+    let dinoHP = dino.hp;
     let playerDamage = await Math.min(dino.str - player.def, 1);
     let dinoDamage = await Math.min(player.str - dino.def, 1);
     let result = {
@@ -303,14 +305,14 @@ app.post('/player/battle/:name', setAuth, async (req, res) =>{
     let turn = 1;
     while (turn > 0) {
         result.description += `턴: ${turn}`;
-        if(turn >= 10 || player.HP <= 20) {
+        if (turn >= 10 || player.HP <= 20) {
             //도망치기 버튼 활성화
         }
         player.incrementHP(-playerDamage);
         dinoHP -= dinoDamage;
         await player.save();
 
-        if(player.HP <= 0){
+        if (player.HP <= 0) {
             result.description += `${dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
             player.x = 0;
             player.y = 0;

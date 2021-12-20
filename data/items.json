@@ -3,6 +3,7 @@
     "id": 1,
     "type": "consumption",
     "name": "야자수 열매",
+    "description": "hp를 20 회복하는 열매이다.",
     "hp": 20
   },
   {

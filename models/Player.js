@@ -11,7 +11,7 @@ const schema = new Schema({
     def: { type: Number, default: 5 }, //방어력
     x: { type: Number, default: 0 }, //맵의 x좌표
     y: { type: Number, default: 0 }, //맵의 y좌표,
-    items : {type: Array, default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, //0~10:아이템, 11:공룡이빨,
+    // items : {type: Array, default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, //0~10:아이템, 11:공룡이빨, -> 착용, 해제를 적용하기 위해선 하나의 컬럼으로는 부족
     email: String
 });
 
