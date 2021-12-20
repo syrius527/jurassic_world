@@ -315,6 +315,11 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 //let turn = 1;
                 //while (turn < 10 && player.HP > 20)
                 for (let turn = 1; turn > 0 ; turn++) {
+                    if (turn>=10 || player.HP <= 0.2*player.maxHP) {
+                        console.log(events.field);
+                        // event.field[3][5] = 1;
+                        // event.field[3][6] = 1;
+                    }
                     event.description += `${turn}턴, `;
                     player.incrementHP(-playerDamage);
                     dinoHP -= dinoDamage;
@@ -333,7 +338,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
                         event.description += `${_dino.name}을 쓰러뜨렸습니다!\n 경험치를 ${_dino.exp} 획득하였습니다!`;
                         //경험치 획득 및 레벨업
                         player.exp += _dino.exp;
-                        if(player.exp > 10) {
+                        if (player.level >= 5) {
+                            event.description += "최대 레벨입니다."
+                        } else if(player.exp > 10) {
                             let lvUp = parseInt(player.exp/10);
                             for (let i=lvUp; i>0; i--) {
                                 player.exp -= 10;
