@@ -22,7 +22,8 @@ class MapManager extends Manager {
                 y: field[1],
                 description: field[2],
                 canGo: field[3],
-                events: field[4]
+                fieldType:field[4],
+                events: field[5]
             };
         });
     }
