@@ -48,9 +48,17 @@
     </div> -->
 
     <div class="info">
+<<<<<<< HEAD
         <div class="player_info">
         </div>
         <div class="inventory_info">
+=======
+        <div id="player_info">
+
+        </div>
+        <div id="inventory_info">
+
+>>>>>>> 6411bf27d06860e242289e6458a148535b6df27f
         </div>
     </div>
 
@@ -83,7 +91,7 @@
             .catch(err => {
                 console.log(err)
             })
-
+        
         axios.get(`/player/inventory/${name.split('/')[5]}`)
             .then(res => {
                 console.log(res.data)
