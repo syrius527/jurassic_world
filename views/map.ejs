@@ -23,11 +23,11 @@
     </div> -->
 
     <div class="info">
-        <div class="player_info">
+        <div id="player_info">
 
         </div>
-        <div class="inventory_info">
-            
+        <div id="inventory_info">
+
         </div>
     </div>
 
@@ -46,7 +46,7 @@
             .catch(err => {
                 console.log(err)
             })
-
+        
         axios.get(`/player/inventory/${name.split('/')[5]}`)
             .then(res => {
                 console.log(res.data)

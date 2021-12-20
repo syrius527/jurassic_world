@@ -150,12 +150,12 @@ app.get('/player/inventory/:name', setAuth, async (req, res) => {
             var cnt = inventory[i].cnt
             var wear = inventory[i].wear
             var itemId = inventory[i].itemId
-            item_list.forEach( o => {
-                if(o.id === itemId) {
+            item_list.forEach(o => {
+                if (o.id === itemId) {
                     item = o
                 }
             })
-            items[i] = {item, cnt, wear}
+            items[i] = { item, cnt, wear }
         }
         res.status(200).json(items)
     } catch (error) {
@@ -164,34 +164,68 @@ app.get('/player/inventory/:name', setAuth, async (req, res) => {
     }
 })
 
-//장비 착용,해제, 소비템 사용(신동환)
-app.post('/player/item', setAuth, async (req, res) => {
+//장비 착용 해제, 소비템 사용
+app.post('/player/item', async (req, res) => {
     try {
         var name = req.body.name
         var item = req.body.item
         var wear = req.body.wear
-        var item_list = fs.readFileSync('./data/items.json', 'utf8')
-    } catch (error) {
 
+        var player = await Player.findOne({ name })
+        console.log(player)
+        var inventory = await Inventory.findOne({ itemId: item.id })
+        if (item.type === 'attack') {
+            var str = item.str
+            //장착
+            if (wear === true) player.str += str
+            //해제
+            else player.str -= str
+
+            inventory.wear = wear
+            await player.save()
+            await inventory.save()
+
+            console.log(player)
+            console.log(inventory)
+            console.log('공격 장비 장착/해제')
+        } else if (item.type === 'armor') {
+            var def = item.def
+            //장착
+            if (wear === false) player.def += def
+            //해제
+            else player.def -= def
+
+            inventory.wear = wear
+            await player.save()
+            await inventory.save()
+
+            console.log(player)
+            console.log(inventory)
+            console.log('방어 장비 장착/해제')
+        } else if (item.type === 'consumption') {
+            if(item.hp === item.maxHP) {
+                console.log('max 체력, 회복 불가')
+            } else {
+                var hp = item.hp
+                player.hp += hp
+                if(player.hp > player.maxHP) player.hp = player.maxHP
+                inventory.cnt --
+                if(inventory.cnt === 0) delete inventory
+                await player.save()
+                await inventory.save()
+            }
+
+            console.log(player)
+            console.log(inventory)
+            console.log('소비 아이템 사용')
+        }
+        res.status(200).json({ msg: 'success' })
+    } catch (error) {
+        console.log(error)
+        res.status(400).json({ error: "DB_ERROR" })
     }
 })
 
-
-//아이템 획득 (임시)
-// app.post('/player/item/gain', async (req, res) => {
-//     try {
-//         var name = req.body.name
-//         var itemId = req.body.itemId
-//         var cnt = req.body.cnt
-//         var wear = false
-//         item = new Inventory({ name: name, itemId: itemId, cnt: cnt, wear: wear });
-//         await item.save()
-//         res.status(200).json({ msg: 'success' })
-//     } catch (error) {
-//         console.log(error)
-//         res.status(400).json({ error: "DB_ERROR" })
-//     }
-// })
 
 
 //맵 화면 (임시)
