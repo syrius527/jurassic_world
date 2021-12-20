@@ -296,6 +296,65 @@ app.get('/player/death/:name', setAuth, async (req, res) => {
     }
 })
 
+
+/* dinosaur 랜덤 배치 (박신영)
+아래 랜덤 배치 관련 코드가 이미 짜여져 있어 일단 이렇게 해뒀습니다 
+
+const HERBIVORE_IDS = [1,2];
+const CARNIVORE_IDS = [3,4,5];
+const SEA_MONSTER_IDS = [6, 7];
+const FLYING_IDS = [8,9];
+
+function pickRandom(array) {
+    return Math.floor(Math.random() * (array.length));
+};
+const TERRAIN = {
+    GRASS: 0,
+    MEAT: 1,
+    WATER: 2,
+    FLYING: 3,
+}
+
+
+function getRandomMonsterId(terrainType) {
+    let monsterIds;
+    switch (terrainType) {
+        case TERRAIN.GRASS:
+            monsterIds = HERBIVORE_IDS;
+            break;
+        case TERRAIN.MEAT:
+            monsterIds = CARNIVORE_IDS;
+            break;
+        case TERRAIN.WATER:
+            monsterIds = SEA_MONSTER_IDS;
+            break;
+        case TERRAIN.FLYING:
+            monsterIds = FLYING_IDS;
+            break;
+        default:
+            throw new Error('Unknown terrain type')
+    }
+    return pickRandom(monsterIds);
+}
+
+*/ 
+
+//맵 화면
+app.get('/player/map/:name', setAuth, async (req, res) => {
+    if (req.cookies.authorization) {
+        var name = req.params.name;
+        var player = await Player.findOne({ name });
+        console.log('player',player,name);
+        const mapTile=mapManager.getField(0,0);
+        //const mapTile=mapManager.getField(player.x,player.y);
+        const monsterId=getRandomMonsterId(mapTile.monster);
+        //console.log(monsterId);
+        const monster=monsterManager.getMonster(monsterId);
+        res.render("map", { data: { player, monster, mapTile } });
+    } else {
+        res.redirect(301, '/')
+    }
+})
 // battle
 app.post('/player/battle/:name', setAuth, async (req, res) => {
     //req에 fieldType받아와야됨
