@@ -1,25 +1,32 @@
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
 const port = 3000;
+
+const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const bodyParser = require('body-parser')
-const cookieParser = require('cookie-parser');
-const { encryptPassword, setAuth } = require("./utils");
-const fs = require('fs');
-const { constantManager, mapManager } = require("./data/Manager");
-const { User, Player, Inventory } = require('./models');
-const items = require('./data/items.json');
-const dinos = require('./data/monster.json');
 dotenv.config();
 
-app.use(bodyParser.json())
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+
+const { constantManager, mapManager } = require('./data/Manager');
+const dinos = require('./data/monster.json');
+const { User, Player, Inventory } = require('./models');
+const { encryptPassword, setAuth } = require('./utils');
+
+
+//json처리
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cookieParser());
+
 
 //몽고 DB 연결
-const mongoURL = "mongodb+srv://seoji:1111@getcoin.tfry7.mongodb.net/coinServer?retryWrites=true&w=majority";
-// const mongoURL = process.env.MONGODB_URL
+const mongoURL = 'mongodb+srv://test0:test0@testmongo.xir8z.mongodb.net/gameServer?retryWrites=true&w=majority';
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -29,38 +36,37 @@ mongoose.connect(mongoURL, {
     console.log(err)
 })
 
+
 // function which returns random number btw min max
 function randomNum(min, max) {
     const randNum = Math.floor(Math.random() * (max - min + 1)) + min;
     return randNum;
 }
 
-//json처리
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(cookieParser());
+const authentication = async (req, res, next) => {
+    const { authorization } = req.headers;
+    if (!authorization) return res.sendStatus(401);
+    const [bearer, key] = authorization.split(" ");
+    if (bearer !== "Bearer") return res.sendStatus(401);
+    const player = await Player.findOne({ key });
+    if (!player) return res.sendStatus(401);
 
+    req.player = player;
+    next();
+};
 
 
 //뷰 엔진 (api 로그인,회원가입 기능 테스트 완료후 뷰 연결)
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-app.use("/static", express.static(path.join(__dirname, 'public')));
+app.use('/static', express.static(path.join(__dirname, 'public')));
+app.engine('html', require('ejs').renderFile);
 
-app.engine("html", require("ejs").renderFile);
 
-//플레이어 선택, 생성 화면
-//플레이어 선택, 생성 화면
-app.get('/player', setAuth, async(req,res) => {
-    if (req.cookies.email != '') {
-        var email = req.cookies.email
-        var players = await Player.find().where({email})
-        res.render("home", {data: {players}})
-    } else {
-        res.redirect(301, '/')
-    }
+//처음화면
+app.get('/', (req, res) => {
+    res.render('login')
 })
-
 
 //회원가입
 app.post('/register', async (req, res) => {
@@ -76,18 +82,7 @@ app.post('/register', async (req, res) => {
     res.status(200).json({ _id: user._id });
 })
 
-//로그인 페이지
-    app.get('/', (req, res) => {
-        res.render('login')
-    })
-
-app.get('/game/:name', (req, res) => {
-    const name = req.params.name;
-    res.render("game", {data: name})
-
-})
-
-//로그인 로직
+//로그인
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const encryptedPassword = encryptPassword(password);
@@ -98,21 +93,30 @@ app.post('/login', async (req, res) => {
 
     user.key = encryptPassword(crypto.randomBytes(20));
     let header_auth = `Bearer ${user.key}`;
-
     res.cookie('authorization', header_auth);
     res.cookie('email', email);
-
     await user.save();
 
     res.status(200).json({ key: user.key });
 })
 
+//플레이어 선택 화면
+app.get('/player', setAuth, async(req,res) => {
+    if (req.cookies.email !== '') {
+        const email = req.cookies.email
+        const players = await Player.find().where({email})
+        res.render("home", {data: {players}})
+    } else {
+        res.redirect(301, '/')
+    }
+})
 
 //캐릭터 생성
 app.post('/player/create', setAuth, async (req, res) => {
     try {
-        var name = req.body.name
-        var email = req.cookies.email
+        const name = req.body.name;
+        const email = req.cookies.email;
+        let msg = "";
         if (await Player.exists({ name })) {
             msg = "Player is already exists"
         } else {
@@ -126,6 +130,9 @@ app.post('/player/create', setAuth, async (req, res) => {
                 y: 0,
                 email
             })
+            const key = crypto.randomBytes(24).toString("hex");
+            player.key = key;
+
             await player.save()
             msg = "Success"
         }
@@ -135,56 +142,32 @@ app.post('/player/create', setAuth, async (req, res) => {
     }
 })
 
+
+app.get('/game/:name', (req, res) => {
+    const name = req.params.name;
+    res.render("game", {data: name})
+})
+
+
 //플레이어 상태 확인(신동환)
+//########################################################
 app.get('/player/:name', setAuth, async (req, res) => {
     try {
-        var name = req.params.name
-        var player = await Player.findOne({ name })
-        var level = player.level
-        var exp = player.exp
-        var maxHP = player.maxHP
-        var HP = player.HP
-        var str = player.str
-        var def = player.def
-        var data = { level, exp, maxHP, HP, str, def }
+        const name = req.params.name
+        const  player = await Player.findOne({ name })
+        const  level = player.level
+        const  exp = player.exp
+        const  maxHP = player.maxHP
+        const  HP = player.HP
+        const  str = player.str
+        const  def = player.def
+        const  data = { level, exp, maxHP, HP, str, def }
         res.status(200).json(data)
     } catch (error) {
         res.status(400).json({ error: "DB_ERROR" })
     }
 })
-
-// //맵 화면
-// // app.get('/player/map/:name', setAuth, async (req, res) => {
-// //
-
-//인벤토리 보여주기(신동환)
-app.get('/player/inventory/:name', setAuth, async (req, res) => {
-    try {
-        var name = req.params.name
-        var inventory = await Inventory.find().where({ name })
-        var items = []
-        var cnt = 0
-        var item = {}
-        var wear = false
-        var item_list = fs.readFileSync('./data/items.json', 'utf8')
-        item_list = JSON.parse(item_list)
-        for (var i = 0; i < inventory.length; i++) {
-            var cnt = inventory[i].cnt
-            var wear = inventory[i].wear
-            var itemId = inventory[i].itemId
-            item_list.forEach(o => {
-                if (o.id === itemId) {
-                    item = o
-                }
-            })
-            items[i] = { item, cnt, wear }
-        }
-        res.status(200).json(items)
-    } catch (error) {
-        console.log(error)
-        res.status(400).json({ error: "DB_ERROR" })
-    }
-})
+//########################################################
 
 //장비 착용 해제, 소비템 사용
 app.post('/player/item', setAuth, async (req, res) => {
