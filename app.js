@@ -363,7 +363,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
             } else if (typeNum > 60 && typeNum <= 75) {
                 _eventType = 'item';
             } else if (typeNum > 75 && typeNum <= 85) {
-                _eventType = 'none';
+                _eventType = 'heal';
             } else {
                 _eventType = 'none';
             }
@@ -527,7 +527,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
             else if (_eventType === "heal") {
                 event = { type: "heal", description: "운좋게 체력을 회복했다." }
                 event.description1 = "힘을 내서 다시 가보자!"
-                player.incrementHP(25);
+                player.incrementHP(15);
             }
             else if (_eventType = "none") {
                 event = {type: "none", description: "아무 일도 없었다." };
