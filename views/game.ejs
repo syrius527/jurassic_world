@@ -47,9 +47,9 @@
     <button value="3">서쪽으로 이동한다.</button>
     <button value="2">남쪽으로 이동한다.</button>
     <button value="0">북쪽으로 이동한다.</button>
-    <button value="4">계속 싸운다.</button>
-    <button value="5">도망간다.</button></div>
-</div>
+    </div>
+    <button id="keep_going" value="4">계속 싸운다.</button>
+    <button id= "run" value="5">도망간다.</button></div>
 
 <script>
 
@@ -94,6 +94,15 @@
 
                 $('#control').append(dom);
             })
+            // 도망간다/ 계속 싸운다 버튼 숨겨놓기
+
+            $("#keep_going").hide();
+            $("#run").hide();
+            if (event.type === 'battle' && (player.HP / player.maxHP) < 0.2 ){
+                $("#keep_going").show();
+                $("#run").show();
+            }
+
 
             if (event) {
                 console.log(event)
@@ -118,7 +127,6 @@
 
 
     sendAction(`/action/${name}`, {action: 'query'});
-    //sendAction('/action/', { action: 'query'});
 
 
 
