@@ -588,6 +588,13 @@ app.post('/action/:name', setAuth, async (req, res) => {
     console.log(_eventType)
     console.log(event)
     console.log(field)
+
+    const item = await Inventory.find({player: player, having: true});
+    const itemArr = []
+    item.forEach(e => itemArr .push(e.name))
+    player.itemNameArr = itemArr
+    player.save();
+
     return res.send({ player, field, event, actions })
 });
 

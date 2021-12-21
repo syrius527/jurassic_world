@@ -33,7 +33,7 @@
     획득한 이빨 개수: <span id="teeth"></span>
 </div>
 <div id="inventory">
-    <button value="true">Inventory</button>
+    아이템: <span id="items"></span><br>
 </div>
 
 <div class = "game_description">
@@ -115,6 +115,7 @@
             $('#str').text(`${player.str}`)
             $('#defense').text(`${player.def}`)
             $('#teeth').text(`${player.teeth}`)
+            $('#items').text(`${player.itemNameArr}`)
         });
 
     }
