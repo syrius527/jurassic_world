@@ -48,8 +48,7 @@
     <button value="2">남쪽으로 이동한다.</button>
     <button value="0">북쪽으로 이동한다.</button>
     </div>
-<!--    <button id="keep_going" onclick="gogo()">계속 싸운다.</button>-->
-<!--    <button id= "run" value="5">도망간다.</button></div>-->
+
 
 <script>
     const gogo = ()=>{
@@ -92,7 +91,6 @@
                 const dom = $('<button></button>');
                 dom.text(action.text);
                 dom.bind('click', function () {
-                    console.log('h')
                     sendAction(action.url, action.params);
                 });
 
@@ -124,7 +122,7 @@
     }
 
 
-    sendAction(`/action/${name}`, {action: 'query', round: 'first'});
+    sendAction(`/action/${name}`, {action: 'query'});
 
 
 
