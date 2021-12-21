@@ -584,7 +584,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             }
                         }
                     }
-                    event.description1 += `${itemName} 1개를 잃어버렸습니다.`
                     await player.save();
                     actions.push({
                         url: `/action/${name}`,
