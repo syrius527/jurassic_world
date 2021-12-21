@@ -294,7 +294,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
         if (_eventType) {
             if (_eventType === "battle") {
                 eventJson.event = "battle";
-                event = {type: "battle", description: "공룡과 마주쳤다"}
+                event = {type: "battle", description: "(゜▼゜＊） 공룡과 마주쳤다"}
                 let _dino = null;
 
                 field = mapManager.getField(player.x, player.y);
