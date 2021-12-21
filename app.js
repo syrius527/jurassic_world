@@ -304,8 +304,8 @@ app.post('/action/:name', setAuth, async (req, res) => {
     const name = req.params.name;
     const user = req.user;
     const email = user.email
-    const player = await Player.findOne({ name })
-    let eventJson = {}
+    const player = await Player.findOne({ name });
+    let eventJson = {};
     let event = null;
     let field = null;
     let actions = [];
@@ -314,13 +314,13 @@ app.post('/action/:name', setAuth, async (req, res) => {
     const makeEvent = ()=>{
         let typeNum = randomNum(1, 100);
         if (typeNum > 0 && typeNum <= 60) {
-            return 'battle';
+            return "battle";
         } else if (typeNum > 60 && typeNum <= 75) {
-            return  'item';
+            return  "item";
         } else if (typeNum > 75 && typeNum <= 85) {
-            return  'heal';
+            return  "heal";
         } else {
-            return  'none';
+            return  "none";
         }}
 
     let _eventType = makeEvent();
@@ -356,8 +356,8 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
         if (_eventType) {
             if (_eventType === "battle") {
+                eventJson.event = "battle";
                 event = {type: "battle", description: "공룡과 마주쳤다"}
-                //eventsJson.find(e => e.type === 'battle')
                 let _dino = null;
 
                 field = mapManager.getField(player.x, player.y);
@@ -382,26 +382,23 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     //console.log(_dino)
                     event.description1 = '익룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
                 }
+
                 // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
                 let dinoHP = _dino.hp;
                 const playerStr = player.str + player.itemStr;
                 const playerDef = player.def + player.itemDef;
                 let playerDamage = Math.max(_dino.str - playerDef, 1);
                 let dinoDamage = Math.max(playerStr - _dino.def, 1);
-                //event = {
-                //    description: '야생의 ' + _dino.name + '이(가) 나타났다!!\n'
-                //}
 
                 let turn = 0;
-                let playerHP = player.hp;
-                let playermaxHP = player.maxHP;
+
                 let battleStatus = "ing";
-                while (turn <= 10 && playerHP / playermaxHP > 0.2) {
+                while (turn <= 10 && player.HP / player.maxHP > 0.2) {
                     event.description1 += `${turn}턴, `;
                     player.incrementHP(-playerDamage);
                     dinoHP -= dinoDamage;
                     console.log(dinoHP);
-                    turn++;
+                    turn += 1;
                     if (dinoHP <= 0) {
                         // 공룡 이빨 획득
                         event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다!`;
@@ -441,7 +438,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             action: "ing",
                             continue: 1,
                             dinoHP: dinoHP,
-                            dino: _dino
+                            dino: _dino.name
                         }
                     });
                     actions.push({
@@ -451,9 +448,8 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             action: "ing",
                             continue: 0,
                             dinoHP: dinoHP,
-                            dino: _dino
+                            dino: _dino.name
                         }
-
                     });
 
 
@@ -512,31 +508,55 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
         // 싸움 계속 선택시 (전투마저하기)
     }else if (action === "ing"){
-        const x = req.player.x;
-        const y = req.player.y;
-
+        x = player.x;
+        y = player.y;
         const dino = req.body.dino;
         const _dino = dinos.find(e => e.name === dino);
         let dinoHP = req.body.dinoHP;
-        let playerHP = req.player.HP;
-        eventJson.event = "fighting";
+        let playerHP = player.HP;
+        eventJson.event = "ing";
 
         field = mapManager.getField(x, y);
-        if (req.body.continue === 1){
-            while(req.player.HP){
-                const playerStr = player.str + player.itemStr;
-                const playerDef = player.def + player.itemDef;
-                let playerDamage = Math.max(_dino.str - playerDef, 1);
-                let dinoDamage = Math.max(playerStr - _dino.def, 1);
-                player.incrementHP(-playerDamage);
+        if (req.body.continue === '1'){
+            let turn = 1;
+            const playerStr = player.str + player.itemStr;
+            const playerDef = player.def + player.itemDef;
+            let playerDamage = Math.max(_dino.str - playerDef, 1);
+            let dinoDamage = Math.max(playerStr - _dino.def, 1);
+            event={description1 :''}
+            while(player.HP){
+                event.description1 += `${turn}턴, `;
+                player.HP -= playerDamage;
                 dinoHP -= dinoDamage;
+                turn += 1;
 
-                if (dinoHP < 0){
-                    eventJson.event = "win";
-                    await player.save();
-                }
+                if(dinoHP <=0) {
+                    // 공룡 이빨 획득
+                    event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다!`;
+                    player.teeth += _dino.teeth;
 
+                    //경험치 획득 및 레벨업
+                    event.description1 += `${_dino.name}을 쓰러뜨렸습니다!\n 경험치를 ${_dino.exp} 획득하였습니다!`;
+                    player.exp += _dino.exp;
+                    if (player.level >= 5) {
+                        event.description1 += "최대 레벨입니다."
+                    } else if (player.exp > 10) {
+                        let lvUp = parseInt(player.exp / 10);
+                        for (let i = lvUp; i > 0; i--) {
+                            player.exp -= 10;
+                            player.level += 1;
+                            let strUp = Math.floor(Math.random() * (3)) + 2;
+                            let defUp = Math.floor(Math.random() * (4)) + 2;
+                            player.str += strUp;
+                            player.def += defUp;
+                            event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다.`;
+                        }
+                    }
+
+                    break;
+                }}
                 if (player.HP <= 0) {
+                    eventJson.event = "die";
                     event.description1 += `${_dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
                     player.x = 0;
                     player.y = 0;
@@ -563,19 +583,18 @@ app.post('/action/:name', setAuth, async (req, res) => {
                         text: "부활",
                         params: { action: "query" }
                     });
-                    break;
-                }
+
             }
-        }else if (req.body.continue === 0){
+        }else if (req.body.continue === '0'){
             return (eventJson.event = "run");
         }
 
 
     }
 
+
     // 도망치기 선택
-    if (eventJson.event !== "ing" && eventJson.event !== "die") {
-        actions = [];
+    if (eventJson.event !== "battle" && eventJson.event !== "die") {
         const directions = ["북", "동", "남", "서"];
         field.canGo.forEach((direction, i) => {
             if (direction === 1) {
@@ -590,7 +609,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
       field = mapManager.getField(player.x,player.y);
 
-      console.log(actions)
+
       eventJson.message = field.descriptions ;
 
     // 정다은) 각 이벤트별로 설명이 여러줄로 적히는게 보기 좋을 것 같아 event에 description1을 추가했습니다.

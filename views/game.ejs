@@ -80,8 +80,7 @@
         }).done((req) => {
             const { player, field, event, actions } = req;
 
-            // $('#game').text(field.description);
-            $('#game').text("map.json 수리중");
+            $('#game').text(field.description);
             $('#position').text(`(${field.x},${field.y})`);
             const x = field.x;
             const y = field.y;
