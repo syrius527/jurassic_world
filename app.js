@@ -328,11 +328,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
     // (처음 화면 : 1번만 등장 > game.ejs)
     if (action === "query") {
         field = mapManager.getField(player.x, player.y);
-        //console.log(field)
     }
     else if (action === "move") {
         const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
-
         let x = player.x;
         let y = player.y;
         if (direction === 0) {
@@ -364,22 +362,18 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 if (field.fieldType === 'green') {
                     const monsterNum = randomNum(1, 2)
                     _dino = dinos.find(e => e.id === monsterNum)
-                    //console.log(_dino)
                     event.description1 = '초식공룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
                 } else if (field.fieldType === 'white') {
                     const monsterNum = randomNum(3, 5)
                     _dino = dinos.find(e => e.id === monsterNum)
-                    //console.log(_dino)
                     event.description1 = '육식공룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
                 } else if (field.fieldType === 'blue') {
                     const monsterNum = randomNum(6, 7)
                     _dino = dinos.find(e => e.id === monsterNum)
-                    //console.log(_dino)
                     event.description1 = '수룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
                 } else if (field.fieldType === 'yellow') {
                     const monsterNum = randomNum(8, 9)
                     _dino = dinos.find(e => e.id === monsterNum)
-                    //console.log(_dino)
                     event.description1 = '익룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
                 }
 
@@ -579,22 +573,21 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     event.description1 += `${itemName} 1개를 잃어버렸습니다.`
                     await player.save();
                     actions.push({
-                        url: "/action",
+                        url: `/action/${name}`,
                         text: "부활",
                         params: { action: "query" }
                     });
 
             }
-        }else if (req.body.continue === '0'){
-            return (eventJson.event = "run");
         }
-
-
+        // 도망치기 선택
+        else if (req.body.continue === '0'){
+            eventJson.event = "run";
+        }
     }
 
-
-    // 도망치기 선택
     if (eventJson.event !== "battle" && eventJson.event !== "die") {
+        actions =[];
         const directions = ["북", "동", "남", "서"];
         field.canGo.forEach((direction, i) => {
             if (direction === 1) {
@@ -606,6 +599,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
             }
         });
     }
+
 
       field = mapManager.getField(player.x,player.y);
 
@@ -620,7 +614,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 // 지금 분리할 필요는 없는 것 같아 item event가 일어나면 일단 이를 획득하도록 만들었습니다.
                 // inventory에 없는 item이라면 새롭게 추가하고 이미 가지고 있는 item이면 수를 늘렸습니다.
                 // 이를 위해 Inventory.js와 Player.js도 약간 수정했습니다.
-
     return res.send({ player, field, event, actions })
 });
 
