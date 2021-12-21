@@ -555,19 +555,33 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     player.x = 0;
                     player.y = 0;
                     player.HP = player.maxHP;
-                    //아이템 잃어버리기
-                    // 정다은) 플레이어의 모든 item을 보는 방법을 찾을 수 없어 while 문을 돌리고 랜덤으로 item를 받아
-                    // item이 존재하는 경우에 개수를 줄이도록 만들었습니다.
                     let itemName = null
                     while (true) {
-                        const itemId = randomNum(1, 12)
-                        const item = await Inventory.findOne({player: player, itemId: itemId})
-                        console.log(item)
-                        if (item !== undefined && item !== null) {
-                            itemName = item.name
-                            const minusCnt = item.cnt - 1
-                            await Inventory.findOneAndUpdate({player: player, itemId: itemId}, {cnt: minusCnt})
-                            break;
+                        //아이템 잃어버리기
+                        let itemName = null
+                        while (true) {
+                            const possibility = randomNum(0,2);
+                            const item = await Inventory.find({player: player, having : true});
+                            if (possibility === 0) {
+                                event.description1 += "운좋게 아무 것도 잃지 않았습니다."
+                                break;
+                            } else { // possibility = 1, 2
+                                if (item.length === 0) { // has no item
+                                    break;
+                                } else { // has at least 1 item
+                                    const lostNum = randomNum(0,item.length-1);
+                                    itemName = item[lostNum].name;
+                                    console.log(item);
+                                    console.log('lostitem' + itemName);
+                                    await Inventory.findOneAndUpdate({player: player, name : itemName}, {have: false});
+                                    event.description1 += `${itemName}을(를) 잃어버렸습니다.`
+
+                                    //const aitem = await Inventory.find({player: player, have : true});
+                                    //console.log(aitem);
+                                    break;
+                                }
+
+                            }
                         }
                     }
                     event.description1 += `${itemName} 1개를 잃어버렸습니다.`
