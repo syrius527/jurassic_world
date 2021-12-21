@@ -14,6 +14,8 @@ const cookieParser = require('cookie-parser');
 
 const { constantManager, mapManager } = require('./data/Manager');
 const dinos = require('./data/monster.json');
+const eventsJson = require('./data/events.json')
+const itemsJson = require('./data/items.json')
 const { User, Player, Inventory } = require('./models');
 const { encryptPassword, setAuth } = require('./utils');
 
@@ -130,9 +132,9 @@ app.post('/player/create', setAuth, async (req, res) => {
                 y: 0,
                 email
             })
+
             const key = crypto.randomBytes(24).toString("hex");
             player.key = key;
-
             await player.save()
             msg = "Success"
         }
@@ -238,8 +240,72 @@ app.get('/player/map/:name', setAuth, async (req, res) => {
     res.render("map")
 })
 
+/*
+app.post("/action", authentication, async (req, res) => {
+    const { action } = req.body;
+    const player = req.player;
+    let event = null;
+    let field = null;
+    let actions = [];
+    if (action === "query") {
+        field = mapManager.getField(req.player.x, req.player.y);
+    } else if (action === "move") {
+        const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
+        let x = req.player.x;
+        let y = req.player.y;
+        if (direction === 0) {
+            y -= 1;
+        } else if (direction === 1) {
+            x += 1;
+        } else if (direction === 2) {
+            y += 1;
+        } else if (direction === 3) {
+            x -= 1;
+        } else {
+            res.sendStatus(400);
+        }
+        field = mapManager.getField(x, y);
+        if (!field) res.sendStatus(400);
+        player.x = x;
+        player.y = y;
 
+        const events = field.events;
+        const actions = [];
+        if (events.length > 0) {
+            // TODO : 확률별로 이벤트 발생하도록 변경
+            const _event = events[0];
+            if (_event.type === "battle") {
+                // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
+
+                event = { description: "늑대와 마주쳐 싸움을 벌였다." };
+                player.incrementHP(-1);
+            } else if (_event.type === "item") {
+                event = { description: "포션을 획득해 체력을 회복했다." };
+                player.incrementHP(1);
+                player.HP = Math.min(player.maxHP, player.HP + 1);
+            }
+        }
+
+        await player.save();
+    }
+
+    field.canGo.forEach((direction, i) => {
+        if (direction === 1) {
+            actions.push({
+                url: "/action",
+                text: i,
+                params: { direction: i, action: "move" }
+            });
+        }
+    });
+
+    return res.send({ player, field, event, actions });
+});
+
+
+ */
 //아마 map기능
+
 app.post('/action/:name', setAuth, async (req, res) => {
     const { action } = req.body;
     const name = req.params.name;
@@ -250,9 +316,14 @@ app.post('/action/:name', setAuth, async (req, res) => {
     let event = null;
     let field = null;
     let actions = [];
+
+    // (처음 화면 : 1번만 등장 > game.ejs)
     if (action === "query") {
         field = mapManager.getField(player.x, player.y);
+        console.log(field)
+
     } else if (action === "move") {
+            console.log(req.body)
         const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
         let x = player.x;
         let y = player.y;
@@ -269,6 +340,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
         }
 
         field = mapManager.getField(x, y);
+        console.log('-------------------')
+        console.log(field)
+
         if (!field) res.sendStatus(400);
 
         player.x = x;
@@ -277,24 +351,65 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
         const events = field.events;
         const actions = [];
+        console.log(events)
+
         if (events.length > 0) {
             // TODO : 확률별로 이벤트 발생하도록 변경
-            const _event = events[0];
-            if (_event.type === "battle") {
-                // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-                const _dino = dinos.filter(function(e) {
-                    return e.id === _event.monster;
-                })[0];
-                //event = { description: `${_dino.name}와(과) 마주쳐 싸움을 벌였다.`};
+            // 정다은) 현재 map.json에 작성된 확률을 기반으로 만들었습니다
+            // percent의 개수만큼 event type을 arr에 추가하고 랜덤으로 인덱스를 설정했습니다.
+            const probability = [];
+            events.forEach(event => {
+                for (let i=0; i < event['percent']; i++) {
+                    probability.push(event['type'])
+                }})
+            console.log(probability)
 
+            const _eventType = probability[Math.floor(Math.random() * probability.length)]
+            const _event = events.find(e => e.type === _eventType)
+            console.log(_event)
+            console.log(player)
+
+
+            // 정다은) 각 이벤트별로 설명이 여러줄로 적히는게 보기 좋을 것 같아 event에 description1을 추가했습니다.
+            // 결과적인 event 형태는 다음과 같이 될 것입니다.
+            // { type: "battle", description: "event 자체에 대한 설명", description1 : "각 경우의 더 자세한 설명" }
+
+            if (_event.type === "battle") {
+                event = { type: "battle", description: "공룡과 마주쳤다" }
+                    //eventsJson.find(e => e.type === 'battle')
+                let _dino = null;
+
+                if (field.fieldType === 'green') {
+                    const monsterNum = randomNum(1, 2)
+                    _dino = dinos.find(e => e.id === monsterNum)
+                    console.log(_dino)
+                    event.description1 = '초식공룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
+                } else if (field.fieldType === 'white') {
+                    const monsterNum = randomNum(3, 5)
+                    _dino = dinos.find(e => e.id === monsterNum)
+                    console.log(_dino)
+                    event.description1 = '육식공룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
+                } else if (field.fieldType === 'blue') {
+                    const monsterNum = randomNum(6, 7)
+                    _dino = dinos.find(e => e.id === monsterNum)
+                    console.log(_dino)
+                    event.description1 = '수룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
+                } else if (field.fieldType === 'yellow') {
+                    const monsterNum = randomNum(8, 9)
+                    _dino = dinos.find(e => e.id === monsterNum)
+                    console.log(_dino)
+                    event.description1 = '익룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!!'
+                }
+
+                // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
                 let dinoHP = _dino.hp;
                 const playerStr = player.str + player.itemStr;
                 const playerDef = player.def + player.itemDef;
                 let playerDamage = Math.max(_dino.str - playerDef, 1);
                 let dinoDamage = Math.max(playerStr - _dino.def, 1);
-                event = {
-                    description: '야생의 ' + _dino.name + '이(가) 나타났다!!\n'
-                }
+                //event = {
+                //    description: '야생의 ' + _dino.name + '이(가) 나타났다!!\n'
+                //}
                 //let turn = 1;
                 //while (turn < 10 && player.HP > 20)
                 for (let turn = 1; turn > 0 ; turn++) {
@@ -303,26 +418,44 @@ app.post('/action/:name', setAuth, async (req, res) => {
                         // event.field[3][5] = 1;
                         // event.field[3][6] = 1;
                     }
-                    event.description += `${turn}턴, `;
+
+                    event.description1 += `${turn}턴, `;
                     player.incrementHP(-playerDamage);
                     dinoHP -= dinoDamage;
                     console.log(dinoHP);
                     await player.save();
 
                     if (player.HP <= 0) {
-                        event.description += `${_dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
+                        event.description1 += `${_dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
                         player.x = 0;
                         player.y = 0;
                         player.HP = player.maxHP;
+
                         //아이템 잃어버리기
+                        // 정다은) 플레이어의 모든 item을 보는 방법을 찾을 수 없어 while 문을 돌리고 랜덤으로 item를 받아
+                        // item이 존재하는 경우에 개수를 줄이도록 만들었습니다.
+                        let itemName = null
+                        while (true) {
+                            const itemId = randomNum(1,12)
+                            const item = await Inventory.findOne({player: player, itemId : itemId})
+                            console.log(item)
+                            if (item !== undefined && item !== null) {
+                                itemName = item.name
+                                const minusCnt = item.cnt - 1
+                                await Inventory.findOneAndUpdate({player: player, itemId : itemId}, {cnt: minusCnt})
+                                break
+                            }
+                        }
+                        event.description1 += `${itemName} 1개를 잃어버렸습니다.`
                         await player.save();
                         break;
+
                     } else if (dinoHP <= 0) {
-                        event.description += `${_dino.name}을 쓰러뜨렸습니다!\n 경험치를 ${_dino.exp} 획득하였습니다!`;
                         //경험치 획득 및 레벨업
+                        event.description1 += `${_dino.name}을 쓰러뜨렸습니다!\n 경험치를 ${_dino.exp} 획득하였습니다!`;
                         player.exp += _dino.exp;
                         if (player.level >= 5) {
-                            event.description += "최대 레벨입니다."
+                            event.description1 += "최대 레벨입니다."
                         } else if(player.exp > 10) {
                             let lvUp = parseInt(player.exp/10);
                             for (let i=lvUp; i>0; i--) {
@@ -332,49 +465,73 @@ app.post('/action/:name', setAuth, async (req, res) => {
                                 let defUp = Math.floor(Math.random()*(4)) + 2;
                                 player.str += strUp;
                                 player.def += defUp;
-                                event.description += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다.`;
+                                event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다.`;
                             }
                         }
+                        // 공룡 이빨 획득
+                        event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다!`;
                         player.teeth += _dino.teeth;
                         await player.save();
                         break;
                     }
                 }
-            } else if (_event.type === "item") {
-                const _item = items.filter(function(e) {
-                    return e.id === _event.item;
-                })[0];
-                if(_item.type === "attack") {
-                    event = { description: _item.description };
-                    //add to inventory
-                } else if(_item.type === "armor") {
-                    event = { description: _item.description };
-                    //add to inventory
+            }
+                // 정다은) item을 'attact', 'armor', 'consumption' 등으로 분류되어 있었는데
+                // 지금 분리할 필요는 없는 것 같아 item event가 일어나면 일단 이를 획득하도록 만들었습니다.
+                // inventory에 없는 item이라면 새롭게 추가하고 이미 가지고 있는 item이면 수를 늘렸습니다.
+                // 이를 위해 Inventory.js와 Player.js도 약간 수정했습니다.
+                // 질문) heal event가 있으니 야자수 열매를 빼는 것이 어떨까요?
+
+            else if (_event.type === "item") {
+                event = { type: "item", description: "아이템을 획득했다." }
+
+                const _item = itemsJson.find(e => e.id === _event.item )
+                console.log(_item)
+
+                event.description1 = _item.description;
+
+                const existingItem = await Inventory.findOne({ player: player, itemId: _item.id});
+                if (existingItem) {
+                    const cntUp = existingItem.cnt + 1
+                    await Inventory.findOneAndUpdate({player: player, itemId: _item.id}, { cnt: cntUp });
                 } else {
-                    event = { description: '아무 일도 일어나지 않았다.' };
+                    try {
+                        const inventory = new Inventory({player: player, itemId: _item.id, name: _item.name, cnt: 1, wear: false});
+                        await inventory.save();
+                    } catch (err) {
+                        return res.status(400).json({error: 'cannot add inventory'});
+                    }
                 }
-            } else if (_event.type === "heal") {
+            }
+                // 정다은)
+            else if (_event.type === "heal") {
+                event = { type: "heal", description: "운좋게 체력을 회복했다." }
+                event.description1 = "힘을 내서 다시 가보자!"
                 player.incrementHP(30);
             }
         }
-
         await player.save();
     }
 
     field = mapManager.getField(player.x, player.y);
+
+    const directionString = ["북", "동", "남", "서"];
     field.canGo.forEach((direction, i) => {
         if (direction === 1) {
             actions.push({
                 url: `/action/${name}`,
-                text: i,
+                text: directionString[i],
                 params: { direction: i, action: "move" }
             });
         }
     });
 
+    console.log('------------------')
+    console.log(event)
     return res.send({ player, field, event, actions })
-
 });
+
+
 
 
 //맵이동 (아이템획득시 스탯 업데이트, 도망가기)
