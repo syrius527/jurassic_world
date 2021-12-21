@@ -17,7 +17,7 @@
 <body>
     <div class="home_wrap">
         <div class="main_title">플레이어 선택</div>
-        <div class="card_list">
+        <div id ="cards" class="card_list">
             <% for (var i=0; i < data.players.length; i++) { %>
                 <div class="card" onclick="select_player(this)">
                     <div id="unique" style="display: none;"><%= data.players[i].name %></div>
@@ -50,17 +50,23 @@
 
 
     <script>
+        var ele = document.getElementById('cards');
+        var eleCount = ele.childElementCount;
 
         const select_player = player => {
             if (confirm('플레이어를 선택하시겠습니까?')) {
                 let name = player.childNodes[1].innerText
                 //div text에서 공백제거
                 name = name.trim()
-                window.location.href =`/game/${name}`
+                window.location.href =`/game/${name}/`
             }
         }
 
         const create_player = () => {
+            // 생성 횟수 다섯번으로 제한
+            if(eleCount >5){
+                return alert('5번까지만 생성 가능!')
+            }
             const name = document.getElementById('player_name').value
             axios.post('/player/create',
                 {
