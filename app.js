@@ -493,7 +493,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     event.description1 = "힘을 내서 다시 가보자!"
                     player.incrementHP(15);
                     await player.save();
-                } else if (_eventType = "none") {
+                } else if (_eventType === "none") {
                     event = {type: "none", description: "아무 일도 없었다."};
                     event.description1 = "";
                 }
@@ -525,13 +525,12 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 turn += 1;
 
                 if(dinoHP <=0) {
-                    // 공룡 이빨 획득
-                    event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다!`;
+                    //경험치, 공룡 이빨 획득 및 레벨업
+                    event.description1 += `${_dino.name}을 쓰러뜨렸습니다!\n ${_dino.teeth}개의 이빨을 획득하였습니다!`;
                     player.teeth += _dino.teeth;
-
-                    //경험치 획득 및 레벨업
-                    event.description1 += `${_dino.name}을 쓰러뜨렸습니다!\n 경험치를 ${_dino.exp} 획득하였습니다!`;
+                    event.description1 += `경험치를 ${_dino.exp} 획득하였습니다!`;
                     player.exp += _dino.exp;
+
                     if (player.level >= 5) {
                         event.description1 += "최대 레벨입니다."
                     } else if (player.exp > 10) {
@@ -544,9 +543,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             player.str += strUp;
                             player.def += defUp;
                             event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다.`;
+                            await player.save();
                         }
                     }
-
                     break;
                 }}
                 if (player.HP <= 0) {
@@ -555,36 +554,25 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     player.x = 0;
                     player.y = 0;
                     player.HP = player.maxHP;
-                    let itemName = null
-                    while (true) {
-                        //아이템 잃어버리기
-                        let itemName = null
-                        while (true) {
-                            const possibility = randomNum(0,2);
-                            const item = await Inventory.find({player: player, having : true});
-                            if (possibility === 0) {
-                                event.description1 += "운좋게 아무 것도 잃지 않았습니다."
-                                break;
-                            } else { // possibility = 1, 2
-                                if (item.length === 0) { // has no item
-                                    break;
-                                } else { // has at least 1 item
-                                    const lostNum = randomNum(0,item.length-1);
-                                    itemName = item[lostNum].name;
-                                    console.log(item);
-                                    console.log('lostitem' + itemName);
-                                    await Inventory.findOneAndUpdate({player: player, name : itemName}, {have: false});
-                                    event.description1 += `${itemName}을(를) 잃어버렸습니다.`
-
-                                    //const aitem = await Inventory.find({player: player, have : true});
-                                    //console.log(aitem);
-                                    break;
-                                }
-
-                            }
+                    let itemName = null;
+                    const possibility = randomNum(0,2);
+                    const item = await Inventory.find({player: player, having : true});
+                    if (possibility === 0) {
+                        event.description1 += "운좋게 아이템을 잃지 않았습니다.";
+                    } else { // possibility = 1, 2
+                        if (item.length !== 0) { // has at least 1 item
+                            const lostNum = randomNum(0,item.length-1);
+                            itemName = item[lostNum].name;
+                            console.log(item);
+                            console.log('lost item' + itemName);
+                            await Inventory.findOneAndUpdate({player: player, name : itemName}, {have: false});
+                            event.description1 += `${itemName}을(를) 잃어버렸습니다.`
+                            await player.save();
+                            //const aitem = await Inventory.find({player: player, have : true});
+                            //console.log(aitem);
                         }
                     }
-                    await player.save();
+
                     actions.push({
                         url: `/action/${name}`,
                         text: "부활",
@@ -613,9 +601,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
         });
     }
 
-
       field = mapManager.getField(player.x,player.y);
-
 
       eventJson.message = field.descriptions ;
 
@@ -625,21 +611,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
                 // 정다은) item을 'attact', 'armor', 'consumption' 등으로 분류되어 있었는데
                 // 지금 분리할 필요는 없는 것 같아 item event가 일어나면 일단 이를 획득하도록 만들었습니다.
-                // inventory에 없는 item이라면 새롭게 추가하고 이미 가지고 있는 item이면 수를 늘렸습니다.
                 // 이를 위해 Inventory.js와 Player.js도 약간 수정했습니다.
     return res.send({ player, field, event, actions })
 });
-
-
-
-
-//맵이동 (아이템획득시 스탯 업데이트, 도망가기)
-
-
-//전투 or 도망
-
-
-//레벨업 (1업 마다 능력치 모두 1상승)
 
 
 //사망 (게임 처음부터 시작)
