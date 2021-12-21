@@ -15,7 +15,7 @@
 
 <body>
 <img style="width:54px; height:50px; top: 0px; float: right"
-            src="https://user-images.githubusercontent.com/80246502/146648014-9877b90a-4bcd-4510-ba43-43902ac3786c.PNG">
+     src="https://user-images.githubusercontent.com/80246502/146648014-9877b90a-4bcd-4510-ba43-43902ac3786c.PNG">
 <div class="info">
     <div class="player_info">
     </div>
@@ -43,12 +43,12 @@
     <div id="event_description"></div>
     ---------------------------------------------------<br>
     <div id="control">
-    <button value="1">동쪽으로 이동한다.</button>
-    <button value="3">서쪽으로 이동한다.</button>
-    <button value="2">남쪽으로 이동한다.</button>
-    <button value="0">북쪽으로 이동한다.</button>
+        <button value="1">동쪽으로 이동한다.</button>
+        <button value="3">서쪽으로 이동한다.</button>
+        <button value="2">남쪽으로 이동한다.</button>
+        <button value="0">북쪽으로 이동한다.</button>
     </div>
-
+</div>
 
 <script>
     const gogo = ()=>{
@@ -97,17 +97,16 @@
             })
 
             if (event) {
-                console.log(event)
                 $('#event_result').text(event.description);
                 if (event.description1) $('#event_description').text(event.description1);
-            } else {
-                if (field.x === 9 && field.y === 9) {
-                    if (player.teeth >= 30) {
-                        $('#event_result').text("헬기 조종사 : 탈출을 축하한다!");
-
+                else {
+                    if (field.x === 9 && field.y === 9) {
+                        if (player.teeth >= 30) $('#event_result').text("헬기 조종사 : 탈출을 축하한다!");
+                        else $('#event_result').text("헬기 조종사 : 공룡 이빨의 개수가 부족하다. 30개를 모아와라!");
                     }
-                    else  $('#event_result').text("헬기 조종사 : 공룡 이빨의 개수가 부족하다. 30개를 모아와라!");
-                } else $('#event_result').text("아무 일도 일어나지 않았다.");
+                }
+            } else {
+                $('#event_result').text("아무 일도 일어나지 않았다.");
                 $('#event_description').text("");
             }
 
