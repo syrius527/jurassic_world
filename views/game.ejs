@@ -79,7 +79,7 @@
             method: "POST",
             data: params
         }).done((req) => {
-            const { player, field, event, actions, turns } = req;
+            const { player, field, event, actions } = req;
 
             // $('#game').text(field.description);
             $('#game').text("map.json 수리중");
@@ -88,20 +88,16 @@
             const y = field.y;
 
             $('#control').html('');
-            req.actions.forEach((action) => {
+            actions.forEach((action) => {
                 const dom = $('<button></button>');
                 dom.text(action.text);
                 dom.bind('click', function () {
+                    console.log('h')
                     sendAction(action.url, action.params);
                 });
 
                 $('#control').append(dom);
             })
-            // 도망간다/ 계속 싸운다 버튼 숨겨놓기
-
-
-
-
 
             if (event) {
                 console.log(event)
