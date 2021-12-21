@@ -268,7 +268,6 @@ app.post("/action", authentication, async (req, res) => {
         if (!field) res.sendStatus(400);
         player.x = x;
         player.y = y;
-
         const events = field.events;
         const actions = [];
         if (events.length > 0) {
@@ -276,7 +275,6 @@ app.post("/action", authentication, async (req, res) => {
             const _event = events[0];
             if (_event.type === "battle") {
                 // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
-
                 event = { description: "늑대와 마주쳐 싸움을 벌였다." };
                 player.incrementHP(-1);
             } else if (_event.type === "item") {
@@ -285,10 +283,8 @@ app.post("/action", authentication, async (req, res) => {
                 player.HP = Math.min(player.maxHP, player.HP + 1);
             }
         }
-
         await player.save();
     }
-
     field.canGo.forEach((direction, i) => {
         if (direction === 1) {
             actions.push({
@@ -298,11 +294,8 @@ app.post("/action", authentication, async (req, res) => {
             });
         }
     });
-
     return res.send({ player, field, event, actions });
 });
-
-
  */
 //아마 map기능
 
@@ -322,8 +315,31 @@ app.post('/action/:name', setAuth, async (req, res) => {
         field = mapManager.getField(player.x, player.y);
         console.log(field)
 
-    } else if (action === "move") {
-            console.log(req.body)
+    }
+    // 싸움 계속 선택시 (전투마저하기)
+    else if (action == "continue"){
+        if (player.HP <= 0) {
+                event.description1 += `${_dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
+                player.x = 0;
+                player.y = 0;
+                player.HP = player.maxHP;
+
+    }}
+    // 도망치기 선택
+    else if (action == "run"){
+        actions = [];
+        field.canGo.forEach((direction, i) => {
+            if (direction === 1) {
+                actions.push({
+                    url: `/action/${name}`,
+                    text: directionString[i],
+                    params: { direction: i, action: "move" }
+                });
+            }
+        });
+        return res.send({ player, field, event, actions })
+    }
+    else if (action === "move") {
         const direction = parseInt(req.body.direction, 0); // 0 북. 1 동 . 2 남. 3 서.
         let x = player.x;
         let y = player.y;
@@ -341,7 +357,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
         field = mapManager.getField(x, y);
         console.log('-------------------')
-        console.log(field)
+        console.log(field);
 
         if (!field) res.sendStatus(400);
 
@@ -375,8 +391,8 @@ app.post('/action/:name', setAuth, async (req, res) => {
             // { type: "battle", description: "event 자체에 대한 설명", description1 : "각 경우의 더 자세한 설명" }
 
             if (_event.type === "battle") {
-                event = { type: "battle", description: "공룡과 마주쳤다" }
-                    //eventsJson.find(e => e.type === 'battle')
+                event = {type: "battle", description: "공룡과 마주쳤다"}
+                //eventsJson.find(e => e.type === 'battle')
                 let _dino = null;
 
                 if (field.fieldType === 'green') {
@@ -410,77 +426,93 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 //event = {
                 //    description: '야생의 ' + _dino.name + '이(가) 나타났다!!\n'
                 //}
-                //let turn = 1;
-                //while (turn < 10 && player.HP > 20)
-                for (let turn = 1; turn > 0 ; turn++) {
-                    if (turn>=10 || player.HP <= 0.2*player.maxHP) {
-                        console.log(events.field);
-                        // event.field[3][5] = 1;
-                        // event.field[3][6] = 1;
-                    }
-
+                let turn = 0;
+                while (turn < 10 && player.HP / player.maxHP > 20) {
                     event.description1 += `${turn}턴, `;
                     player.incrementHP(-playerDamage);
                     dinoHP -= dinoDamage;
                     console.log(dinoHP);
-                    await player.save();
+                    turn++;
+                    if (dinoHP <= 0) {
+                        // 공룡 이빨 획득
+                        event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다!`;
+                        player.teeth += _dino.teeth;
 
-                    if (player.HP <= 0) {
-                        event.description1 += `${_dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
-                        player.x = 0;
-                        player.y = 0;
-                        player.HP = player.maxHP;
-
-                        //아이템 잃어버리기
-                        // 정다은) 플레이어의 모든 item을 보는 방법을 찾을 수 없어 while 문을 돌리고 랜덤으로 item를 받아
-                        // item이 존재하는 경우에 개수를 줄이도록 만들었습니다.
-                        let itemName = null
-                        while (true) {
-                            const itemId = randomNum(1,12)
-                            const item = await Inventory.findOne({player: player, itemId : itemId})
-                            console.log(item)
-                            if (item !== undefined && item !== null) {
-                                itemName = item.name
-                                const minusCnt = item.cnt - 1
-                                await Inventory.findOneAndUpdate({player: player, itemId : itemId}, {cnt: minusCnt})
-                                break
-                            }
-                        }
-                        event.description1 += `${itemName} 1개를 잃어버렸습니다.`
-                        await player.save();
-                        break;
-
-                    } else if (dinoHP <= 0) {
                         //경험치 획득 및 레벨업
                         event.description1 += `${_dino.name}을 쓰러뜨렸습니다!\n 경험치를 ${_dino.exp} 획득하였습니다!`;
                         player.exp += _dino.exp;
                         if (player.level >= 5) {
                             event.description1 += "최대 레벨입니다."
-                        } else if(player.exp > 10) {
-                            let lvUp = parseInt(player.exp/10);
-                            for (let i=lvUp; i>0; i--) {
+                        } else if (player.exp > 10) {
+                            let lvUp = parseInt(player.exp / 10);
+                            for (let i = lvUp; i > 0; i--) {
                                 player.exp -= 10;
                                 player.level += 1;
-                                let strUp = Math.floor(Math.random()*(3)) + 2;
-                                let defUp = Math.floor(Math.random()*(4)) + 2;
+                                let strUp = Math.floor(Math.random() * (3)) + 2;
+                                let defUp = Math.floor(Math.random() * (4)) + 2;
                                 player.str += strUp;
                                 player.def += defUp;
                                 event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다.`;
                             }
                         }
-                        // 공룡 이빨 획득
-                        event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다!`;
-                        player.teeth += _dino.teeth;
                         await player.save();
                         break;
                     }
+                    await player.save();
                 }
+
+                // for (let turn = 1; turn > 0 ; turn++) {
+                //     if (turn>=10 || player.HP <= 0.2*player.maxHP) {
+                //         console.log(events.field);
+                //         // event.field[3][5] = 1;
+                //         // event.field[3][6] = 1;
+                //     }
+                if (dinoHP > 0) {
+                    actions.push({
+                        url: `/action/${name}`,
+                        text: "계속 싸운다.",
+                        params: {action: "continue"}
+                    });
+                    actions.push({
+                        url: `/action/${name}`,
+                        text: "도망친다.",
+                        params: {action: "run"}
+
+                    });
+                    return res.send({ player, field, event, actions });
+                }
+                // if (player.HP <= 0) {
+                //     event.description1 += `${_dino.name}에게 당했습니다..\n 정신을 차려보니 시작점입니다!`
+                //     player.x = 0;
+                //     player.y = 0;
+                //     player.HP = player.maxHP;
+
+                //아이템 잃어버리기
+                // 정다은) 플레이어의 모든 item을 보는 방법을 찾을 수 없어 while 문을 돌리고 랜덤으로 item를 받아
+                // item이 존재하는 경우에 개수를 줄이도록 만들었습니다.
+                let itemName = null
+                while (true) {
+                    const itemId = randomNum(1, 12)
+                    const item = await Inventory.findOne({player: player, itemId: itemId})
+                    console.log(item)
+                    if (item !== undefined && item !== null) {
+                        itemName = item.name
+                        const minusCnt = item.cnt - 1
+                        await Inventory.findOneAndUpdate({player: player, itemId: itemId}, {cnt: minusCnt})
+                        break;
+                    }
+                }
+                event.description1 += `${itemName} 1개를 잃어버렸습니다.`
+                await player.save();
             }
+
+
+
                 // 정다은) item을 'attact', 'armor', 'consumption' 등으로 분류되어 있었는데
                 // 지금 분리할 필요는 없는 것 같아 item event가 일어나면 일단 이를 획득하도록 만들었습니다.
                 // inventory에 없는 item이라면 새롭게 추가하고 이미 가지고 있는 item이면 수를 늘렸습니다.
                 // 이를 위해 Inventory.js와 Player.js도 약간 수정했습니다.
-                // 질문) heal event가 있으니 야자수 열매를 빼는 것이 어떨까요?
+            // 질문) heal event가 있으니 야자수 열매를 빼는 것이 어떨까요?
 
             else if (_event.type === "item") {
                 event = { type: "item", description: "아이템을 획득했다." }
@@ -503,7 +535,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     }
                 }
             }
-                // 정다은)
+            // 정다은)
             else if (_event.type === "heal") {
                 event = { type: "heal", description: "운좋게 체력을 회복했다." }
                 event.description1 = "힘을 내서 다시 가보자!"
@@ -512,6 +544,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
         }
         await player.save();
     }
+
 
     field = mapManager.getField(player.x, player.y);
 
@@ -565,13 +598,11 @@ app.get('/player/death/:name', setAuth, async (req, res) => {
 
 
 /* dinosaur 랜덤 배치 (박신영)
-아래 랜덤 배치 관련 코드가 이미 짜여져 있어 일단 이렇게 해뒀습니다 
-
+아래 랜덤 배치 관련 코드가 이미 짜여져 있어 일단 이렇게 해뒀습니다
 const HERBIVORE_IDS = [1,2];
 const CARNIVORE_IDS = [3,4,5];
 const SEA_MONSTER_IDS = [6, 7];
 const FLYING_IDS = [8,9];
-
 function pickRandom(array) {
     return Math.floor(Math.random() * (array.length));
 };
@@ -581,8 +612,6 @@ const TERRAIN = {
     WATER: 2,
     FLYING: 3,
 }
-
-
 function getRandomMonsterId(terrainType) {
     let monsterIds;
     switch (terrainType) {
@@ -603,7 +632,6 @@ function getRandomMonsterId(terrainType) {
     }
     return pickRandom(monsterIds);
 }
-
 */
 
 
@@ -698,6 +726,6 @@ app.post('/player/battle/:name', setAuth, async (req, res) => {
 
 
 //서버 포트 연결
-    app.listen(port, () => {
-        console.log(`listening at port: ${port}...`);
-    })
+app.listen(port, () => {
+    console.log(`listening at port: ${port}...`);
+})

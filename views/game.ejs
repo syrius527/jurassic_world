@@ -48,11 +48,14 @@
     <button value="2">남쪽으로 이동한다.</button>
     <button value="0">북쪽으로 이동한다.</button>
     </div>
-    <button id="keep_going" value="4">계속 싸운다.</button>
-    <button id= "run" value="5">도망간다.</button></div>
+<!--    <button id="keep_going" onclick="gogo()">계속 싸운다.</button>-->
+<!--    <button id= "run" value="5">도망간다.</button></div>-->
 
 <script>
-
+    const gogo = ()=>{
+        $("#keep_going").hide();
+        $("#run").hide();
+    }
     const modal_open = () => {
         document.getElementById('modal').style.display = 'block'
     }
@@ -76,7 +79,7 @@
             method: "POST",
             data: params
         }).done((req) => {
-            const { player, field, event, actions } = req;
+            const { player, field, event, actions, turns } = req;
 
             // $('#game').text(field.description);
             $('#game').text("map.json 수리중");
@@ -96,12 +99,8 @@
             })
             // 도망간다/ 계속 싸운다 버튼 숨겨놓기
 
-            $("#keep_going").hide();
-            $("#run").hide();
-            if (event.type === 'battle' && (player.HP / player.maxHP) < 0.2 ){
-                $("#keep_going").show();
-                $("#run").show();
-            }
+
+
 
 
             if (event) {
@@ -110,7 +109,10 @@
                 if (event.description1) $('#event_description').text(event.description1);
             } else {
                 if (field.x === 9 && field.y === 9) {
-                    if (player.teeth >= 30) $('#event_result').text("헬기 조종사 : 탈출을 축하한다!");
+                    if (player.teeth >= 30) {
+                        $('#event_result').text("헬기 조종사 : 탈출을 축하한다!");
+
+                    }
                     else  $('#event_result').text("헬기 조종사 : 공룡 이빨의 개수가 부족하다. 30개를 모아와라!");
                 } else $('#event_result').text("아무 일도 일어나지 않았다.");
                 $('#event_description').text("");
@@ -126,7 +128,7 @@
     }
 
 
-    sendAction(`/action/${name}`, {action: 'query'});
+    sendAction(`/action/${name}`, {action: 'query', round: 'first'});
 
 
 
