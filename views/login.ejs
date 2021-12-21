@@ -61,14 +61,21 @@
 
     <script>
         const login_submit = () => {
-            var email = document.getElementById('email_i').value
-            var password = document.getElementById('password_i').value
+            const email = document.getElementById('email_i').value
+            const password = document.getElementById('password_i').value
             axios.post('/login', {
                 email,
                 password
             }).then(res => {
                 alert('로그인 성공!')
-                window.location.href = '/player'
+                const key = localStorage.getItem('_key');
+                if (key) {
+                    window.location.href = '/player'
+                }
+                else {
+                    localStorage.setItem('_key', '123');
+                    window.location.href = '/player';
+                };
             }).catch(err => {
                 alert('이메일 또는 패스워드 불일치')
                 console.log(err)
@@ -82,9 +89,9 @@
             document.getElementById('modal').style.display = 'none'
              }
         const regist_submit = () => {
-            var email = document.getElementById('email_j').value
-            var password = document.getElementById('password_j').value
-            var passwordConfirm = document.getElementById('password_confirm_j').value
+            const email = document.getElementById('email_j').value
+            const password = document.getElementById('password_j').value
+            const passwordConfirm = document.getElementById('password_confirm_j').value
             if (email == "") {
                 alert('이메일을 입력해주세요')
             } else {
