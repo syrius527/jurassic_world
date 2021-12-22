@@ -145,9 +145,12 @@ app.post('/player/create', setAuth, async (req, res) => {
 })
 
 
-app.get('/game/:name', (req, res) => {
+app.get('/game/:name', async (req, res) => {
     const name = req.params.name;
-    res.render("game", {data: name})
+    const player = await Player.findOne({name});
+    var inventory = await Inventory.find().where({player: player, have: true})
+    var data = {name : name, inventory: inventory }
+    res.render("game", {data})
 })
 
 
@@ -179,7 +182,7 @@ app.post('/player/item', setAuth, async (req, res) => {
         var wear = req.body.wear
 
         var player = await Player.findOne({ name })
-        console.log(player)
+
         var inventory = await Inventory.findOne({ itemId: item.id })
         if (item.type === 'attack') {
             var str = item.str
@@ -556,7 +559,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
     if (eventJson.event !== "battle") {
         actions =[];
-        console.log(event)
+
         const directions = ["북", "동", "남", "서"];
         if (eventJson.event === 'die') {
             const canGo = [1,1,0,0]
@@ -585,9 +588,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
     field = mapManager.getField(player.x,player.y);
     eventJson.message = field.descriptions ;
-    console.log(_eventType)
-    console.log(event)
-    console.log(field)
+    // console.log(_eventType)
+    // console.log(event)
+    // console.log(field)
 
     const item = await Inventory.find({player: player, having: true});
     const itemArr = []
