@@ -376,7 +376,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             let itemName = null
                             while (true) {
                                 const possibility = randomNum(0,2);
-                                const item = await Inventory.find({player: player, having : true});
+                                const item = await Inventory.find({player: player, have : true});
                                 if (possibility === 0) {
                                     event.description1 += "운좋게 아무 것도 잃지 않았습니다. "
                                     break;
@@ -456,6 +456,8 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 } else if (haveItem.have) {
                     event.description1 = `${_item.name}은(는) 이미 갖고 있는 아이템이다.`;
                 }
+                // 가지고 있는 아이템 중 type별 능력치가 제일 높은 것만 자동 장착
+
             } else if (_eventType === "heal") {
                 event = {type: "heal", description: "운좋게 체력을 회복했다."}
                 event.description1 = "힘을 내서 다시 가보자!"
@@ -592,7 +594,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
     // console.log(event)
     // console.log(field)
 
-    const item = await Inventory.find({player: player, having: true});
+    const item = await Inventory.find({player: player, have: true});
     const itemArr = []
     item.forEach(e => itemArr .push(e.name))
     player.itemNameArr = itemArr
