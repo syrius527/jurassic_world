@@ -248,11 +248,13 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             event.description1 += `${_dino.name}을 쓰러뜨렸다! 경험치를 ${_dino.exp} 획득하였다! `;
                             player.exp += _dino.exp;
 
-                            if (player.level >= 5) {
-                                event.description1 += "최대 레벨! "
-                            } else if (player.exp > 10) {
+                            if (player.exp > 10) {
                                 let lvUp = parseInt(player.exp / 10);
                                 for (let i = lvUp; i > 0; i--) {
+                                    if (player.level >= 5) {
+                                        event.description1 += "최대 레벨! "
+                                        break;
+                                    }
                                     player.exp -= 10;
                                     player.level += 1;
                                     let strUp = Math.floor(Math.random() * (3)) + 2;
@@ -485,12 +487,11 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     //경험치 획득 및 레벨업
                     event.description1 += `${_dino.name}을 쓰러뜨렸다! 경험치를 ${_dino.exp} 획득하였다! `;
                     player.exp += _dino.exp;
-                    if (player.level >= 5) {
-                        event.description1 += "최대 레벨! "
-                    } else if (player.exp > 10) {
+                    if (player.exp > 10) {
                         let lvUp = parseInt(player.exp / 10);
                         for (let i = lvUp; i > 0; i--) {
                             if (player.level >= 5) {
+                                event.description1 += "최대 레벨! "
                                 break;
                             }
                             player.exp -= 10;
