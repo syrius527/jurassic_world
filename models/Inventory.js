@@ -8,7 +8,6 @@ const schema = new Schema({
   type: String,
   name: String,
   stat: Number,
-  //cnt: Number, //장비는 항상 1개, 소비는 여러개가 들어갈 수 있음, 소비는 사용하면 cnt가 줄어듬
   have: Boolean, // 보유중인지
   wear: Boolean //해당 아이템의 착용 유무를 표시, 소비는 항상 false
 })

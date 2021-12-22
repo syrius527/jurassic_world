@@ -145,75 +145,6 @@ app.get('/game/:name', async (req, res) => {
 })
 
 
-//장비 착용 해제, 소비템 사용
-app.post('/player/item', setAuth, async (req, res) => {
-    try {
-        var name = req.body.name
-        var item = req.body.item
-        var wear = req.body.wear
-
-        var player = await Player.findOne({ name })
-
-        var inventory = await Inventory.findOne({ itemId: item.id })
-        if (item.type === 'attack') {
-            var str = item.str
-            //장착
-            if (wear === true) player.str += str
-            //해제
-            else player.str -= str
-
-            inventory.wear = wear
-            await player.save()
-            await inventory.save()
-
-            console.log(player)
-            console.log(inventory)
-            console.log('공격 장비 장착/해제')
-        } else if (item.type === 'armor') {
-            var def = item.def
-            //장착
-            if (wear === false) player.def += def
-            //해제
-            else player.def -= def
-
-            inventory.wear = wear
-            await player.save()
-            await inventory.save()
-
-            console.log(player)
-            console.log(inventory)
-            console.log('방어 장비 장착/해제')
-        } else if (item.type === 'consumption') {
-            if (item.hp === item.maxHP) {
-                console.log('max 체력, 회복 불가')
-            } else {
-                var hp = item.hp
-                player.hp += hp
-                if (player.hp > player.maxHP) player.hp = player.maxHP
-                inventory.cnt--
-                if (inventory.cnt === 0) delete inventory
-                await player.save()
-                await inventory.save()
-            }
-
-            console.log(player)
-            console.log(inventory)
-            console.log('소비 아이템 사용')
-        }
-        res.status(200).json({ msg: 'success' })
-    } catch (error) {
-        console.log(error)
-        res.status(400).json({ error: "DB_ERROR" })
-    }
-})
-
-
-
-//맵 화면 (임시)
-app.get('/player/map/:name', setAuth, async (req, res) => {
-    res.render("map")
-})
-
 app.post('/action/:name', setAuth, async (req, res) => {
     const { action } = req.body;
     const name = req.params.name;
@@ -224,8 +155,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
     let event = null;
     let field = null;
     let actions = [];
-
-    console.log(player.x, player.y)
 
     const makeEvent = ()=>{
 
@@ -278,7 +207,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 event = {type: "battle", description: "(゜▼゜＊） 공룡과 마주쳤다"}
                 let _dino = null;
 
-                console.log('-------------------here----------------------')
                 field = mapManager.getField(player.x, player.y);
                 if (field.fieldType === 'green') {
                     const monsterNum = randomNum(1, 2)
@@ -298,7 +226,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     event.description1 = '익룡이다! 야생의 ' + _dino.name + '이(가) 나타났다!! '
                 }
 
-                // TODO: 이벤트 별로 events.json 에서 불러와 이벤트 처리
                 let dinoHP = _dino.hp;
                 const playerStr = player.str + player.itemStr;
                 const playerDef = player.def + player.itemDef;
@@ -313,12 +240,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
                         event.description1 += `${turn}턴, `;
                         player.incrementHP(-playerDamage);
                         dinoHP -= dinoDamage;
-                        console.log(dinoHP);
                         turn += 1;
-                        console.log(`first ${turn}`)
                         if (dinoHP <= 0) {
                             eventJson.event = "win"
-
 
                             //경험치 획득 및 레벨업
                             event.description1 += `${_dino.name}을 쓰러뜨렸습니다! 경험치를 ${_dino.exp} 획득하였습니다! `;
@@ -365,8 +289,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                                     } else { // has at least 1 item
                                         const lostNum = randomNum(0,item.length-1);
                                         itemName = item[lostNum].name;
-                                        console.log(item);
-                                        console.log('lostitem' + itemName);
                                         await Inventory.findOneAndUpdate({player: player, name : itemName}, {have: false});
                                         event.description1 += `${itemName}을(를) 잃어버렸습니다. `
 
@@ -388,8 +310,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             armorItem.forEach(function (e) {
                                 armorDef = Math.max(e.stat, armorDef);
                             }) // 제일 높은 def 찾기
-                            console.log(attItem, attStr);
-                            console.log(armorItem, armorDef);
                             player.itemStr = attStr;
                             player.itemDef = armorDef;
                             await player.save();
@@ -475,8 +395,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 armorItem.forEach(function (e) {
                     armorDef = Math.max(e.stat, armorDef);
                 }) // 제일 높은 def 찾기
-                console.log(attItem, attStr);
-                console.log(armorItem, armorDef);
                 player.itemStr = attStr;
                 player.itemDef = armorDef;
                 await player.save();
@@ -539,8 +457,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             } else { // has at least 1 item
                                 const lostNum = randomNum(0, item.length - 1);
                                 itemName = item[lostNum].name;
-                                console.log(item);
-                                console.log('lostitem' + itemName);
                                 await Inventory.findOne({player: player, name: itemName}).deleteOne();
                                 await player.save();
                                 event.description1 += `${itemName}을(를) 잃어버렸습니다. `
@@ -560,8 +476,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     armorItem.forEach(function (e) {
                         armorDef = Math.max(e.stat, armorDef);
                     }) // 제일 높은 def 찾기
-                    console.log(attItem, attStr);
-                    console.log(armorItem, armorDef);
                     player.itemStr = attStr;
                     player.itemDef = armorDef;
                     await player.save();
@@ -599,7 +513,6 @@ app.post('/action/:name', setAuth, async (req, res) => {
         }
     }
 
-
     if (eventJson.event !== "battle") {
         actions =[];
 
@@ -628,12 +541,8 @@ app.post('/action/:name', setAuth, async (req, res) => {
         }
     }
 
-
     field = mapManager.getField(player.x,player.y);
-    eventJson.message = field.descriptions ;
-    // console.log(_eventType)
-    // console.log(event)
-    // console.log(field)
+    eventJson.message = field.description ;
 
     const item = await Inventory.find({player: player, have: true});
     const itemArr = []
@@ -645,52 +554,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
 });
 
 
-
-
-//맵이동 (아이템획득시 스탯 업데이트, 도망가기)
-
-
-//전투 or 도망
-
-
-//레벨업 (1업 마다 능력치 모두 1상승)
-
-
-//사망 (게임 처음부터 시작)
-app.get('/player/death/:name', setAuth, async (req, res) => {
-    try {
-        var name = req.params.name
-        var player = await Player.findOne({ name })
-        player.level = 1
-        player.exp = 0
-        player.maxHP = 10
-        player.HP = 10
-        player.str = 5
-        player.def = 5
-        player.x = 0
-        player.y = 0
-        await player.save()
-        res.status(200).json({ msg: "death" })
-    } catch (error) {
-        res.status(400).json({ error: "DB_ERROR" })
-    }
-})
-
-//맵 화면
+//맵 화면 (임시)
 app.get('/player/map/:name', setAuth, async (req, res) => {
-    if (req.cookies.authorization) {
-        var name = req.params.name;
-        var player = await Player.findOne({ name });
-        console.log('player', player, name);
-        const mapTile = mapManager.getField(0, 0);
-        //const mapTile=mapManager.getField(player.x,player.y);
-        const monsterId = getRandomMonsterId(mapTile.monster);
-        //console.log(monsterId);
-        const monster = monsterManager.getMonster(monsterId);
-        res.render("map", { data: { player, monster, mapTile } });
-    } else {
-        res.redirect(301, '/')
-    }
+    res.render("map")
 })
 
 //서버 포트 연결
