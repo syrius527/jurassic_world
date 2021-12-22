@@ -427,7 +427,17 @@ app.post('/action/:name', setAuth, async (req, res) => {
             } else if (_eventType === "item") {
                 event = {type: "item", description: "아이템을 획득했다."};
                 //item은 기본 아이템(기본칼, 기본총, 천갑옷만 드랍) 추후에 강화가능
-                let _itemNum = 3 * randomNum(0, 2) + 1;
+                //1단계 147 2단계 258 3단계 36910
+                let _itemNum = 1;
+                if (field.x + field.y < 6) {
+                    _itemNum = 3 * randomNum(0, 2) + 1; // 1단계 1 4 7
+                } else if (field.x + field.y >= 6 && field.x + field.y < 11) {
+                    _itemNum = 3 * randomNum(0, 2) + 2; // 2단계 2 5 8
+                } else if (field.x + field.y >= 11 && field.x + field.y <16) {
+                    _itemNum = 3 * randomNum(0, 2) + 3; // 3단계 3 6 9
+                } else if (field.x + field.y === 16) {
+                    _itemNum = 10;
+                }
                 const _item = itemsJson.find(e => e.id === _itemNum);
                 //console.log(_item);
                 let haveItem = await Inventory.findOne({player: player, itemId: _itemNum});
@@ -438,7 +448,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
                         const inventory = new Inventory({
                             player: player,
                             itemId: _item.id,
+                            type: _item.type,
                             name: _item.name,
+                            stat: _item.type === "attack" ? _item.str : _item.def,
                             have: true,
                             wear: false
                         });
@@ -457,6 +469,23 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     event.description1 = `${_item.name}은(는) 이미 갖고 있는 아이템이다.`;
                 }
                 // 가지고 있는 아이템 중 type별 능력치가 제일 높은 것만 자동 장착
+                const attack = "attack";
+                const armor = "armor";
+                const attItem = await Inventory.find({player: player, have : true, type: attack});
+                const armorItem = await Inventory.find({player: player, have : true, type: armor});
+                let attStr = 0;
+                let armorDef = 0;
+                attItem.forEach(function (e) {
+                    attStr = Math.max(e.stat, attStr);
+                }) // 제일 높은 str 찾기
+                armorItem.forEach(function (e) {
+                    armorDef = Math.max(e.stat, armorDef);
+                }) // 제일 높은 def 찾기
+                console.log(attItem, attStr);
+                console.log(armorItem, armorDef);
+                player.itemStr = attStr;
+                player.itemDef = armorDef;
+                await player.save();
 
             } else if (_eventType === "heal") {
                 event = {type: "heal", description: "운좋게 체력을 회복했다."}
