@@ -254,7 +254,14 @@ app.post('/action/:name', setAuth, async (req, res) => {
     let field = null;
     let actions = [];
 
+    console.log(player.x, player.y)
+
     const makeEvent = ()=>{
+
+        if (player.x + player.y === 17) {
+            return "nearEnd"
+        }
+
         let typeNum = randomNum(1, 100);
         if (typeNum > 0 && typeNum <= 60) {
             return "battle";
@@ -300,6 +307,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 event = {type: "battle", description: "(゜▼゜＊） 공룡과 마주쳤다"}
                 let _dino = null;
 
+                console.log('-------------------here----------------------')
                 field = mapManager.getField(player.x, player.y);
                 if (field.fieldType === 'green') {
                     const monsterNum = randomNum(1, 2)
@@ -444,8 +452,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 await player.save();
             } else if (_eventType === "item") {
                 event = {type: "item", description: "아이템을 획득했다."};
-                //item은 기본 아이템(기본칼, 기본총, 천갑옷만 드랍) 추후에 강화가능
-                //1단계 147 2단계 258 3단계 36910
+
                 let _itemNum = 1;
                 if (field.x + field.y < 6) {
                     _itemNum = 3 * randomNum(0, 2) + 1; // 1단계 1 4 7
@@ -457,11 +464,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     _itemNum = 10;
                 }
                 const _item = itemsJson.find(e => e.id === _itemNum);
-                //console.log(_item);
+
                 let haveItem = await Inventory.findOne({player: player, itemId: _itemNum});
                 if (!haveItem) {
-                    //const cntUp = existingItem.cnt + 1
-                    //await Inventory.findOneAndUpdate({player: player, itemId: _item.id}, { cnt: cntUp });
                     try {
                         const inventory = new Inventory({
                             player: player,
@@ -513,6 +518,8 @@ app.post('/action/:name', setAuth, async (req, res) => {
             } else if (_eventType === "none") {
                 event = {type: "none", description: "아무 일도 없었다."};
                 event.description1 = "다시 길을 가자";
+            } else if (_eventType === "nearEnd") {
+                event = {type: "nearEnd", description1 : ""};
             }
         }
         // 싸움 계속 선택시 (전투마저하기)
@@ -617,7 +624,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
         }
         // 도망치기 선택
         else if (req.body.continue === '0'){
-            eventJson.event = "run";
+            event = { type: "run", description : "지금이다!", description1 : "" };
         }
     }
 

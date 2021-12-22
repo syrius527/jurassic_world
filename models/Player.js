@@ -14,7 +14,6 @@ const schema = new Schema({
     x: { type: Number, default: 0, max: 9 }, //맵의 x좌표
     y: { type: Number, default: 0, max: 9 }, //맵의 y좌표,
     teeth: {type: Number, default: 0}, //가진 이빨 개수,
-    // items : {type: Array, default: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, //0~10:아이템, 11:공룡이빨, -> 착용, 해제를 적용하기 위해선 하나의 컬럼으로는 부족
     email: String,
     items: [{ type: Schema.Types.ObjectId, ref: 'Inventory' }],
     itemNameArr : [],
