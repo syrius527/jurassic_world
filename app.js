@@ -570,7 +570,22 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             }
                         }
                     }
-
+                    const attack = "attack";
+                    const armor = "armor";
+                    const attItem = await Inventory.find({player: player, have : true, type: attack});
+                    const armorItem = await Inventory.find({player: player, have : true, type: armor});
+                    let attStr = 0;
+                    let armorDef = 0;
+                    attItem.forEach(function (e) {
+                        attStr = Math.max(e.stat, attStr);
+                    }) // 제일 높은 str 찾기
+                    armorItem.forEach(function (e) {
+                        armorDef = Math.max(e.stat, armorDef);
+                    }) // 제일 높은 def 찾기
+                    console.log(attItem, attStr);
+                    console.log(armorItem, armorDef);
+                    player.itemStr = attStr;
+                    player.itemDef = armorDef;
                     await player.save();
                     break
                 } else if (dinoHP <= 0) {
