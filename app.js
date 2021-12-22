@@ -490,6 +490,9 @@ app.post('/action/:name', setAuth, async (req, res) => {
                     } else if (player.exp > 10) {
                         let lvUp = parseInt(player.exp / 10);
                         for (let i = lvUp; i > 0; i--) {
+                            if (player.level >= 5) {
+                                break;
+                            }
                             player.exp -= 10;
                             player.level += 1;
                             let strUp = Math.floor(Math.random() * (3)) + 2;
