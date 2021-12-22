@@ -61,7 +61,7 @@
 >>>>>>> 6411bf27d06860e242289e6458a148535b6df27f
         </div>
     </div>
-
+    </div>
 </body>
 
     <script>
@@ -91,7 +91,7 @@
             .catch(err => {
                 console.log(err)
             })
-        
+
         axios.get(`/player/inventory/${name.split('/')[5]}`)
             .then(res => {
                 console.log(res.data)
