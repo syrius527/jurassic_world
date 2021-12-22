@@ -9,14 +9,14 @@
   {
     "id": 2,
     "type": "attack",
-    "name": "강철검",
+    "name": "강철 검",
     "description": "강철로 만들어진 검.",
     "str": 7
   },
   {
     "id": 3,
     "type": "attack",
-    "name": "무적검",
+    "name": "무적 검",
     "description": "무엇이든 벨 수 있는 검이다.",
     "str": 10
   },
@@ -44,14 +44,14 @@
   {
     "id": 7,
     "type": "armor",
-    "name": "천갑옷",
+    "name": "천 갑옷",
     "description": "천으로 만들어진 갑옷. 매우 허름하다.",
     "def": 1
   },
   {
     "id": 8,
     "type": "armor",
-    "name": "가죽갑옷",
+    "name": "가죽 갑옷",
     "description": "가죽으로 만들어진 갑옷. 추위를 막을 수 있다.",
     "def": 3
   },

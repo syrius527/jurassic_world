@@ -245,11 +245,11 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             eventJson.event = "win"
 
                             //경험치 획득 및 레벨업
-                            event.description1 += `${_dino.name}을 쓰러뜨렸습니다! 경험치를 ${_dino.exp} 획득하였습니다! `;
+                            event.description1 += `${_dino.name}을 쓰러뜨렸다! 경험치를 ${_dino.exp} 획득하였다! `;
                             player.exp += _dino.exp;
 
                             if (player.level >= 5) {
-                                event.description1 += "최대 레벨입니다. "
+                                event.description1 += "최대 레벨! "
                             } else if (player.exp > 10) {
                                 let lvUp = parseInt(player.exp / 10);
                                 for (let i = lvUp; i > 0; i--) {
@@ -259,18 +259,18 @@ app.post('/action/:name', setAuth, async (req, res) => {
                                     let defUp = Math.floor(Math.random() * (4)) + 2;
                                     player.str += strUp;
                                     player.def += defUp;
-                                    event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다. `;
+                                    event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐다. `;
                                     battleStatus = "win";
                                 }
                             }
                             // 공룡 이빨 획득
-                            event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다! `;
+                            event.description1 += `${_dino.teeth}개의 이빨을 획득하였다! `;
                             player.teeth += _dino.teeth;
                             break;
 
                         } else if (player.HP <= 0) {
                             eventJson.event = "die";
-                            event.description1 += `${_dino.name}에게 당했습니다... 정신을 차려보니 시작점입니다! `
+                            event.description1 += `${_dino.name}에게 당했다... 정신을 차려보니 시작점이다! `
                             player.x = 0;
                             player.y = 0;
                             player.HP = player.maxHP;
@@ -281,7 +281,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                                 const possibility = randomNum(0,2);
                                 const item = await Inventory.find({player: player, have : true});
                                 if (possibility === 0) {
-                                    event.description1 += "운좋게 아무 것도 잃지 않았습니다. "
+                                    event.description1 += "운좋게 아무 것도 잃지 않았다. "
                                     break;
                                 } else { // possibility = 1, 2
                                     if (item.length === 0) { // has no item
@@ -290,7 +290,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                                         const lostNum = randomNum(0,item.length-1);
                                         itemName = item[lostNum].name;
                                         await Inventory.findOneAndUpdate({player: player, name : itemName}, {have: false});
-                                        event.description1 += `${itemName}을(를) 잃어버렸습니다. `
+                                        event.description1 += `${itemName}을(를) 잃어버렸다. `
 
                                         await player.save();
                                         break;
@@ -437,7 +437,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
 
                 if (player.HP <= 0) {
                     eventJson.event = "die";
-                    event.description1 += `${_dino.name}에게 당했습니다... 정신을 차려보니 시작점입니다! `
+                    event.description1 += `${_dino.name}에게 당했다... 정신을 차려보니 시작점이다! `
                     player.x = 0;
                     player.y = 0;
                     player.HP = player.maxHP;
@@ -449,7 +449,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                         const possibility = randomNum(0, 2);
                         const item = await Inventory.find({player: player, having: true});
                         if (possibility === 0) {
-                            event.description1 += "운좋게 아무 것도 잃지 않았습니다. "
+                            event.description1 += "운좋게 아무 것도 잃지 않았다. "
                             break;
                         } else { // possibility = 1, 2
                             if (item.length === 0) { // has no item
@@ -459,7 +459,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
                                 itemName = item[lostNum].name;
                                 await Inventory.findOne({player: player, name: itemName}).deleteOne();
                                 await player.save();
-                                event.description1 += `${itemName}을(를) 잃어버렸습니다. `
+                                event.description1 += `${itemName}을(를) 잃어버렸다. `
                                 break;
                             }
                         }
@@ -483,10 +483,10 @@ app.post('/action/:name', setAuth, async (req, res) => {
                 } else if (dinoHP <= 0) {
 
                     //경험치 획득 및 레벨업
-                    event.description1 += `${_dino.name}을 쓰러뜨렸습니다! 경험치를 ${_dino.exp} 획득하였습니다! `;
+                    event.description1 += `${_dino.name}을 쓰러뜨렸다! 경험치를 ${_dino.exp} 획득하였다! `;
                     player.exp += _dino.exp;
                     if (player.level >= 5) {
-                        event.description1 += "최대 레벨입니다. "
+                        event.description1 += "최대 레벨! "
                     } else if (player.exp > 10) {
                         let lvUp = parseInt(player.exp / 10);
                         for (let i = lvUp; i > 0; i--) {
@@ -496,12 +496,12 @@ app.post('/action/:name', setAuth, async (req, res) => {
                             let defUp = Math.floor(Math.random() * (4)) + 2;
                             player.str += strUp;
                             player.def += defUp;
-                            event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐습니다. `;
+                            event.description1 += `레벨업! str이 ${strUp}, def가 ${defUp} 올랐다. `;
                         }
                     }
 
                     // 공룡 이빨 획득
-                    event.description1 += `${_dino.teeth}개의 이빨을 획득하였습니다! `;
+                    event.description1 += `${_dino.teeth}개의 이빨을 획득하였다! `;
                     player.teeth += _dino.teeth;
                     break;
                 }
