@@ -545,13 +545,14 @@ app.post('/action/:name', setAuth, async (req, res) => {
                                 itemName = item[lostNum].name;
                                 console.log(item);
                                 console.log('lostitem' + itemName);
-                                await Inventory.findOneAndUpdate({player: player, name: itemName}, {have: false});
+                                await Inventory.findOne({player: player, name: itemName}).deleteOne();
                                 await player.save();
                                 event.description1 += `${itemName}을(를) 잃어버렸습니다. `
                                 break;
                             }
                         }
                     }
+
                     await player.save();
                     break
                 } else if (dinoHP <= 0) {

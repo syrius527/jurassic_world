@@ -97,15 +97,14 @@
                 $('#control').append(dom);
             })
 
-            if (event) {
+            if (field.x === 9 && field.y === 9) {
+                if (player.teeth >= 30) $('#event_result').text("헬기 조종사 : 탈출을 축하한다! (˵ ͡~ ͜ʖ ͡°˵)ﾉ");
+                else $('#event_result').text("헬기 조종사 : 공룡 이빨의 개수가 부족하다. 30개를 모아와라!");
+            }
+            else if (event) {
                 $('#event_result').text(event.description);
                 if (event.description1) $('#event_description').text(event.description1);
-                else {
-                    if (field.x === 9 && field.y === 9) {
-                        if (player.teeth >= 30) $('#event_result').text("헬기 조종사 : 탈출을 축하한다! (˵ ͡~ ͜ʖ ͡°˵)ﾉ");
-                        else $('#event_result').text("헬기 조종사 : 공룡 이빨의 개수가 부족하다. 30개를 모아와라!");
-                    }
-                }
+
             } else {
                 $('#event_result').text("아무 일도 일어나지 않았다.");
                 $('#event_description').text("");
