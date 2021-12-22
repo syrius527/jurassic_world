@@ -1,6 +1,7 @@
 [
-  { "type": "item", "description": "아이템을 획득했다" },
+  { "type": "item", "description": "" },
   { "type": "heal", "description": "" },
   { "type": "none", "description": ""},
-  { "type": "battle", "description": "공룡과 마주쳤다" }
+  { "type": "battle", "description": "" },
+  { "type": "nearEnd", "description": "" }
 ]

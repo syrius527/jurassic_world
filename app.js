@@ -45,18 +45,6 @@ function randomNum(min, max) {
     return randNum;
 }
 
-const authentication = async (req, res, next) => {
-    const { authorization } = req.headers;
-    if (!authorization) return res.sendStatus(401);
-    const [bearer, key] = authorization.split(" ");
-    if (bearer !== "Bearer") return res.sendStatus(401);
-    const player = await Player.findOne({ key });
-    if (!player) return res.sendStatus(401);
-
-    req.player = player;
-    next();
-};
-
 
 //뷰 엔진 (api 로그인,회원가입 기능 테스트 완료후 뷰 연결)
 app.set('views', path.join(__dirname, 'views'));
@@ -84,6 +72,7 @@ app.post('/register', async (req, res) => {
     res.status(200).json({ _id: user._id });
 })
 
+
 //로그인
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -102,6 +91,7 @@ app.post('/login', async (req, res) => {
     res.status(200).json({ key: user.key });
 })
 
+
 //플레이어 선택 화면
 app.get('/player', setAuth, async(req,res) => {
     if (req.cookies.email !== '') {
@@ -112,6 +102,7 @@ app.get('/player', setAuth, async(req,res) => {
         res.redirect(301, '/')
     }
 })
+
 
 //캐릭터 생성
 app.post('/player/create', setAuth, async (req, res) => {
@@ -148,29 +139,9 @@ app.post('/player/create', setAuth, async (req, res) => {
 app.get('/game/:name', async (req, res) => {
     const name = req.params.name;
     const player = await Player.findOne({name});
-    var inventory = await Inventory.find().where({player: player, have: true})
-    var data = {name : name, inventory: inventory }
+    const inventory = await Inventory.find().where({player: player, have: true})
+    const data = {name : name, inventory: inventory }
     res.render("game", {data})
-})
-
-
-//플레이어 상태 확인(신동환)
-//########################################################
-app.get('/player/:name', setAuth, async (req, res) => {
-    try {
-        const name = req.params.name
-        const  player = await Player.findOne({ name })
-        const  level = player.level
-        const  exp = player.exp
-        const  maxHP = player.maxHP
-        const  HP = player.HP
-        const  str = player.str
-        const  def = player.def
-        const  data = { level, exp, maxHP, HP, str, def }
-        res.status(200).json(data)
-    } catch (error) {
-        res.status(400).json({ error: "DB_ERROR" })
-    }
 })
 
 
@@ -624,7 +595,7 @@ app.post('/action/:name', setAuth, async (req, res) => {
         }
         // 도망치기 선택
         else if (req.body.continue === '0'){
-            event = { type: "run", description : "지금이다!", description1 : "" };
+            event = { type: "run", description : "지금이다!", description1 : "어느 방향으로 도망갈까?" };
         }
     }
 
