@@ -9,7 +9,6 @@ const schema = new Schema({
   name: String,
   stat: Number,
   have: Boolean, // 보유중인지
-  wear: Boolean //해당 아이템의 착용 유무를 표시, 소비는 항상 false
 })
 
 const Inventory = mongoose.model("Inventory", schema)

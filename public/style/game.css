@@ -11,9 +11,10 @@
 
 .game_description{
     position: absolute;
+    padding : 5px;
     width: 95%;
-    height: 300px;
-    bottom:50px;
+    height: 50%;
+    bottom: 50px;
     border: solid black;
 }
 
